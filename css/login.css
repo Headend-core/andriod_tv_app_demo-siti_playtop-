@@ -1,0 +1,391 @@
+/* ==========================================================
+   LOGIN POPUP (new installers / guest mode)
+   Reference: "Choose how to log in" QR dialog
+   ========================================================== */
+#screen-login-modal {
+  background: rgba(3, 5, 12, 0.78);
+  backdrop-filter: blur(3px);
+  align-items: center;
+  justify-content: center;
+  z-index: 160;
+}
+
+.login-card {
+  position: relative;
+  width: min(1000px, 88vw);
+  max-height: 92vh;
+  overflow: hidden;
+  padding: 34px 56px 26px;
+  border-radius: 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  background: #000000;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  animation: loginPop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes loginPop {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.login-goback-btn {
+  position: absolute;
+  top: 26px;
+  left: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #F8FAFC;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.login-goback-icon { font-size: 1.3rem; line-height: 1; }
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+.login-logo {
+  width: 190px;
+  height: auto;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45)) brightness(1.15);
+}
+
+.login-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.login-view-hidden { display: none !important; }
+
+#login-view-qr {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-qr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.login-steps {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.login-step-tag {
+  background: var(--vibe-red);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.login-step-text {
+  color: #E2E8F0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 0 18px;
+}
+
+.login-step-text b { color: #fff; }
+
+.login-code {
+  color: #fff;
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin: 0 0 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.login-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.login-refresh-icon { font-size: 1.3rem; line-height: 1; }
+.login-refresh-time { font-variant-numeric: tabular-nums; }
+
+.login-qr-box {
+  position: relative;
+  flex-shrink: 0;
+  width: 290px;
+  height: 290px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 3px solid transparent;
+  background: #fff;
+  overflow: hidden;
+}
+
+.login-qr-svg { width: 100%; height: 100%; display: block; }
+
+.login-qr-confirmed {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #0F172A;
+  font-weight: 800;
+  font-size: 1.1rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.login-qr-confirmed span {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #16A34A;
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-qr-done .login-qr-confirmed { opacity: 1; }
+
+.login-legal {
+  text-align: center;
+  color: #CBD5E1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 28px 0 0;
+}
+
+.login-legal b { color: #fff; }
+
+/* Focus states inside the popup */
+#screen-login-modal .login-goback-btn.tv-focused { border-color: #fff; background: rgba(255, 255, 255, 0.1); }
+#screen-login-modal .login-refresh-btn.tv-focused { border-color: #fff; background: rgba(255, 255, 255, 0.12); box-shadow: 0 0 18px rgba(255, 255, 255, 0.25); }
+#screen-login-modal .login-qr-box.tv-focused { border-color: var(--vibe-red); box-shadow: 0 0 0 4px rgba(229, 27, 36, 0.35); }
+
+/* Success */
+#login-view-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0 40px;
+}
+
+.login-success-tick {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #16A34A;
+  color: #fff;
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(22, 163, 74, 0.5);
+  animation: loginPop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+
+.login-success-title { color: #fff; font-size: 1.6rem; font-weight: 800; margin: 18px 0 6px; }
+.login-success-sub { color: #94A3B8; font-size: 1.05rem; margin: 0; }
+
+/* Profile account: Log Out next to plan status */
+.account-top-actions { display: flex; align-items: center; gap: 14px; }
+
+.btn-account-logout {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #E2E8F0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.btn-account-logout.tv-focused {
+  border-color: var(--vibe-red);
+  background: rgba(229, 27, 36, 0.18);
+  color: #fff;
+}
+
+/* ==========================================================
+   REGISTRATION WITH MOBILE NUMBER (number → OTP)
+   ========================================================== */
+#login-view-mobile { display: flex; flex-direction: column; }
+
+.reg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.reg-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.reg-label {
+  color: #E2E8F0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.reg-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 64px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reg-prefix {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #CBD5E1;
+  padding-right: 14px;
+  border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.reg-caret {
+  width: 2px;
+  height: 32px;
+  margin-left: -10px;
+  background: #fff;
+  animation: regCaretBlink 1s steps(1) infinite;
+}
+
+@keyframes regCaretBlink { 50% { opacity: 0; } }
+
+.reg-placeholder {
+  position: absolute;
+  left: 100px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.reg-hint {
+  color: #94A3B8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+
+.reg-error {
+  min-height: 1.3em;
+  color: #FF6B72;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 6px 0 8px;
+}
+
+.reg-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.reg-submit-btn {
+  padding: 13px 30px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: var(--vibe-red, #E51B24);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.reg-link-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #CBD5E1;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+#login-view-qr .reg-link-btn { margin-top: 12px; margin-left: -14px; }
+
+.reg-keypad {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 84px);
+  grid-auto-rows: 58px;
+  gap: 10px;
+}
+
+.reg-key {
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.reg-key-fn { font-size: 1rem; color: #CBD5E1; }
+
+#screen-login-modal .reg-key.tv-focused,
+#screen-login-modal .reg-link-btn.tv-focused {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+#screen-login-modal .reg-submit-btn.tv-focused {
+  border-color: #fff;
+  box-shadow: 0 0 22px rgba(229, 27, 36, 0.6);
+}

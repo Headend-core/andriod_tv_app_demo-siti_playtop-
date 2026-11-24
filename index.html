@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SITI PlayTop Magic</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/home-rails.css">
+  <link rel="stylesheet" href="css/account-info.css">
+  <link rel="stylesheet" href="css/create-profile.css">
+  <link rel="stylesheet" href="css/payment.css">
+  <link rel="stylesheet" href="css/splash.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/remote-tutorial.css">
+  <link rel="stylesheet" href="css/player.css">
+  <link rel="stylesheet" href="css/diwali.css">
+  <link rel="stylesheet" href="css/motion.css">
+</head>
+<body>
+
+  <!-- ========================================================
+       SCREEN 1: PROFILE SELECTION (Pure Clean Starting Screen)
+       Wireframe: media_1794040588235_39b2d066.png
+       (Preferences box removed per media_1794044449838_5ed64b75.jpg)
+       ======================================================== -->
+  <!-- ========================================================
+       SCREEN 0: STARTUP ANIMATION (plays every time the app starts)
+       ======================================================== -->
+  <div id="screen-splash" class="tv-screen screen-active" aria-label="Starting SITI PlayTop Magic">
+    <video id="splash-video" class="splash-video" src="assets/startup_animation.mp4"
+           preload="auto" playsinline disablepictureinpicture></video>
+    <!-- Sharpening filter for the 480p intro when it is scaled up to TV size -->
+    <svg class="splash-filter-defs" aria-hidden="true" focusable="false">
+      <filter id="splash-sharpen" color-interpolation-filters="sRGB">
+        <feConvolveMatrix order="3" preserveAlpha="true"
+          kernelMatrix="0 -0.4 0 -0.4 2.6 -0.4 0 -0.4 0" />
+      </filter>
+    </svg>
+  </div>
+
+
+  <div id="screen-profile" class="tv-screen screen-hidden" role="dialog" aria-label="Profile Selection">
+    <div class="profile-screen-wrapper">
+      <h1 class="profile-screen-title">Who's watching?</h1>
+      
+      <!-- Horizontal Profiles Row with circular logos & outer focus ring -->
+      <div id="profiles-row" class="profiles-row"></div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 1A: CREATE PROFILE (first registration + Add Profile)
+       4 steps: Name → Avatar → Languages → Genres
+       ======================================================== -->
+  <div id="screen-create-profile" class="tv-screen screen-hidden" aria-label="Create Profile">
+    <div class="cp-wrapper">
+      <header class="cp-header">
+        <img src="assets/vibe_logo.png" alt="" class="cp-logo" />
+        <div class="cp-header-text">
+          <h1 id="cp-title" class="cp-title">Create your profile</h1>
+          <p id="cp-subtitle" class="cp-subtitle">Welcome to SITI PlayTop Magic! Let's set up who's watching.</p>
+        </div>
+        <div id="cp-stepper" class="cp-stepper"></div>
+      </header>
+
+      <div class="cp-body">
+        <!-- Left: the active step -->
+        <section class="cp-step-panel">
+          <h2 id="cp-step-title" class="cp-step-title">What should we call you?</h2>
+          <p id="cp-step-hint" class="cp-step-hint">Use the keyboard below to enter a profile name.</p>
+          <div id="cp-step-content" class="cp-step-content"></div>
+          <div class="cp-actions">
+            <button id="cp-btn-back" class="cp-btn cp-btn-ghost focusable">&#8249; Back</button>
+            <button id="cp-btn-next" class="cp-btn cp-btn-primary focusable">Next &#8250;</button>
+          </div>
+        </section>
+
+        <!-- Right: live preview of the profile being created -->
+        <aside class="cp-preview">
+          <span class="cp-preview-label">Preview</span>
+          <div id="cp-preview-avatar" class="cp-preview-avatar">
+            <img src="profile%20icon/01_young_man_hoodie.png" alt="Profile avatar" class="cp-preview-avatar-img" />
+          </div>
+          <div id="cp-preview-name" class="cp-preview-name">Profile name</div>
+          <div class="cp-preview-group">
+            <span class="cp-preview-group-label">Languages</span>
+            <div id="cp-preview-langs" class="cp-preview-tags"></div>
+          </div>
+          <div class="cp-preview-group">
+            <span class="cp-preview-group-label">Content</span>
+            <div id="cp-preview-genres" class="cp-preview-tags"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 1B: LANDING CHANNEL (Full-screen boot channel)
+       Shown after profile selection; 10s countdown → Home
+       ======================================================== -->
+  <div id="screen-landing" class="tv-screen screen-hidden" aria-label="Landing Channel">
+    <!-- Landing channel feed: full-screen video behind the overlays (played by startLandingChannel) -->
+    <video id="landing-video" class="landing-video" src="video%20for%20landing/Paresh-Ram-Das-SnapYT.App.mp4"
+           playsinline loop preload="auto" aria-hidden="true"></video>
+    <div class="landing-channel-bg"></div>
+
+    <div class="landing-top-bar">
+      <div class="landing-channel-badge">
+        <span class="landing-lcn" id="landing-lcn">335</span>
+        <span class="landing-channel-name" id="landing-channel-name">ABP Ananda</span>
+      </div>
+      <span class="landing-live-pill"><span class="landing-live-dot"></span>LIVE</span>
+    </div>
+
+    <div class="landing-center">
+      <img src="assets/vibe_logo.png" alt="" class="landing-logo" />
+      <h1 class="landing-title">Landing Channel</h1>
+      <p class="landing-subtitle" id="landing-now-playing">Now Playing</p>
+    </div>
+
+    <div class="landing-bottom-info">
+      <span class="landing-hint">Press <b>OK</b> to skip to Home</span>
+    </div>
+
+    <button class="landing-timer focusable default-focus" id="btn-landing-skip" aria-label="Skip to Home">
+      <svg class="landing-timer-ring" viewBox="0 0 120 120">
+        <circle class="landing-timer-track" cx="60" cy="60" r="52" />
+        <circle class="landing-timer-progress" id="landing-timer-progress" cx="60" cy="60" r="52" />
+      </svg>
+      <span class="landing-timer-count" id="landing-timer-count">10</span>
+      <span class="landing-timer-label">SKIP</span>
+    </button>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 2: MAIN HOME HUB
+       ======================================================== -->
+  <div id="screen-home" class="tv-screen screen-hidden">
+
+    <!-- Expandable & Minimizable Side Navigation (Wireframe: media_1794041586089_3f180628.png)
+         Options: My Vibe, Home, Live on Vibe, Vibe OTT, Search, Profile, FAQ -->
+    <nav class="side-navigation" aria-label="TV Navigation">
+      <div class="side-nav-brand">
+        <img src="assets/vibe_logo.png" alt="VIBE" class="side-nav-logo-img" />
+      </div>
+      <div class="nav-items-list">
+        <button class="nav-item focusable" data-target="subscription" title="SITI Packages">
+          <span class="nav-icon">★</span>
+          <span class="nav-text">SITI Packages</span>
+        </button>
+        <button class="nav-item focusable active-nav" data-target="home" title="Home">
+          <span class="nav-icon">⌂</span>
+          <span class="nav-text">Home</span>
+        </button>
+        <button class="nav-item focusable" data-target="live-tv" title="Live on SITI">
+          <span class="nav-icon">📺</span>
+          <span class="nav-text">Live on SITI</span>
+        </button>
+        <!-- SITI OTT: placeholder -->
+        <button class="nav-item focusable" data-target="vibe-ott" title="SITI OTT">
+          <span class="nav-icon">▶</span>
+          <span class="nav-text">SITI OTT</span>
+        </button>
+        <button class="nav-item focusable" data-target="search" title="Search">
+          <span class="nav-icon">🔍</span>
+          <span class="nav-text">Search</span>
+        </button>
+        <button class="nav-item focusable" data-target="profile" title="Profile">
+          <span class="nav-icon">👤</span>
+          <span id="nav-profile-label" class="nav-text">Profile</span>
+        </button>
+        <button class="nav-item focusable" data-target="help" title="FAQ">
+          <span class="nav-icon">?</span>
+          <span class="nav-text">FAQ</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Top Header Bar: Clean header with clock only (Redundant logo removed) -->
+    <header class="top-header-bar">
+      <div class="header-right-tools">
+        <div id="header-live-clock" class="header-clock">02:46 PM</div>
+      </div>
+    </header>
+
+    <!-- Scrollable Main Home -->
+    <main id="home-main" class="home-main-scroll scrollable-content">
+
+      <!-- HERO BANNER with Official Partner Tag (media_1794041664160_9aa81cca.png) -->
+      <section class="hero-banner-section">
+        <div class="hero-bg">
+          <img id="hero-right-img" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200&auto=format&fit=crop" alt="Featured Program" />
+        </div>
+        <div class="hero-scrim"></div>
+
+        <div class="hero-left-info">
+          <div class="hero-partner-pill">
+            <span class="partner-red-squircle"></span>
+            <span id="hero-partner-name" class="partner-text">Hoichoi Special</span>
+          </div>
+          <h1 id="hero-title" class="hero-title">Cyberpunk Kolkata 2099</h1>
+          <p id="hero-desc" class="hero-description">Neon lights, rain-drenched tramways, and rogue neural augments. A gritty detective uncovers a syndicate controlling digital reincarnation.</p>
+
+          <div class="hero-actions-container">
+            <button class="btn-watch-now focusable default-focus">
+              <span>Watch Now</span>
+            </button>
+          </div>
+
+          <div id="hero-carousel-dots" class="hero-carousel-dots"></div>
+        </div>
+
+        <!-- Slide arrows (mouse); on the remote, Left/Right on Watch Now changes slide -->
+        <div class="hero-arrow hero-arrow-prev" aria-label="Previous slide">&#8249;</div>
+        <div class="hero-arrow hero-arrow-next" aria-label="Next slide">&#8250;</div>
+      </section>
+
+      <!-- DYNAMIC TILE PREVIEW (Amazon Prime Style) -->
+      <div id="home-sticky-preview-bar" class="home-sticky-preview-bar" hidden>
+        <section id="home-dynamic-preview" class="home-dynamic-preview" aria-label="Selected Tile Preview">
+          <div class="dyn-preview-bg">
+            <img id="dyn-preview-img" src="" alt="Backdrop" />
+            <div class="dyn-preview-scrim"></div>
+          </div>
+          <div class="dyn-preview-content">
+            <div id="dyn-preview-badges" class="dyn-preview-badges"></div>
+            <h1 id="dyn-preview-title" class="dyn-preview-title"></h1>
+            <div id="dyn-preview-subtitle" class="dyn-preview-subtitle"></div>
+            <p id="dyn-preview-desc" class="dyn-preview-desc"></p>
+            <div class="dyn-preview-actions">
+              <span class="dyn-preview-ok-badge">▶ Press OK to Watch</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RAIL 1: RECENTLY WATCHED (Both Live TV Channels & OTT Shows) — landscape -->
+      <section class="content-rail" id="section-recently-watched">
+        <h2 class="rail-heading">Recently Watched</h2>
+        <div id="rail-recently-watched" class="rail-scroll-row horizontal-rail"></div>
+      </section>
+
+      <!-- RAIL: FREE ON VIBE — free-to-air channels, playable without login -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Free on SITI</h2>
+        <div id="rail-free-channels" class="rail-scroll-row horizontal-rail rail-square"></div>
+      </section>
+
+      <!-- RAIL: POPULAR CHANNELS — square logo tiles -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Popular Channels</h2>
+        <div id="rail-popular-channels" class="rail-scroll-row horizontal-rail rail-square"></div>
+      </section>
+
+      <!-- RAIL: TRENDING ON OTT — portrait posters -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Trending on OTT</h2>
+        <div id="rail-trending-ott" class="rail-scroll-row horizontal-rail rail-portrait"></div>
+      </section>
+
+      <!-- RAIL 2: LIVE ON NOW -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Live On Now</h2>
+        <div id="rail-live-channels" class="rail-scroll-row horizontal-rail"></div>
+      </section>
+
+      <!-- PROMO: Happy Diwali banner (OK plays the ad) -->
+      <section id="home-diwali-slot" class="promo-rail"></section>
+
+      <!-- RAIL 3: TRENDING ACROSS INDIA -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Trending Across India</h2>
+        <div id="rail-trending-now" class="rail-scroll-row horizontal-rail rail-portrait"></div>
+      </section>
+
+      <!-- RAIL 4: BLOCKBUSTER MOVIES IN BENGALI & HINDI -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Blockbuster Movies</h2>
+        <div id="rail-blockbuster-movies" class="rail-scroll-row horizontal-rail rail-portrait"></div>
+      </section>
+
+      <!-- RAIL 5: POPULAR WEB SERIES & BINGE HITS -->
+      <section class="content-rail">
+        <h2 class="rail-heading">Popular Web Series</h2>
+        <div id="rail-popular-series" class="rail-scroll-row horizontal-rail"></div>
+      </section>
+
+      <!-- RAIL 6: 24x7 NEWS & REGIONAL CHANNELS -->
+      <section class="content-rail">
+        <h2 class="rail-heading">24x7 Regional News Broadcasts</h2>
+        <div id="rail-news-channels" class="rail-scroll-row horizontal-rail"></div>
+      </section>
+
+    </main>
+
+    <!-- VIBE OTT (left bar → Vibe OTT): shares the side nav with Home and is swapped in
+         place of #home-main. Shows either the main Vibe OTT page or one OTT app's page
+         (Hotstar, ZEE5, …): banner with arrows + a mix of landscape / portrait rows,
+         rendered by renderOttPage() in app.js. -->
+    <main id="vott-main" class="home-main-scroll scrollable-content" hidden>
+
+      <!-- App page only: Back + app name (empty on the main Vibe OTT page) -->
+      <div id="vott-page-head" class="vott-page-head" hidden>
+        <button id="btn-vott-app-back" class="sub-back-btn screen-back-btn focusable">
+          <span>← Back</span>
+        </button>
+        <span id="vott-page-badge" class="vott-page-badge"></span>
+        <h1 id="vott-page-title" class="vott-page-title"></h1>
+      </div>
+
+      <section id="vott-hero" class="hero-banner-section">
+        <div class="hero-bg">
+          <img id="vott-hero-img" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200&auto=format&fit=crop" alt="Featured on Vibe OTT" />
+        </div>
+        <div class="hero-scrim"></div>
+
+        <div id="vott-hero-info" class="hero-left-info">
+          <div class="hero-partner-pill">
+            <span class="partner-red-squircle"></span>
+            <span id="vott-hero-partner" class="partner-text">Vibe OTT</span>
+          </div>
+          <h1 id="vott-hero-title" class="hero-title">Vibe OTT</h1>
+          <p id="vott-hero-desc" class="hero-description"></p>
+
+          <div class="hero-actions-container">
+            <button id="vott-watch-now" class="btn-watch-now vott-watch-now focusable">
+              <span>Watch Now</span>
+            </button>
+          </div>
+
+          <div id="vott-hero-dots" class="hero-carousel-dots"></div>
+        </div>
+
+        <div id="vott-arrow-prev" class="hero-arrow hero-arrow-prev" aria-label="Previous slide">&#8249;</div>
+        <div id="vott-arrow-next" class="hero-arrow hero-arrow-next" aria-label="Next slide">&#8250;</div>
+      </section>
+
+      <!-- DYNAMIC TILE PREVIEW (Amazon Prime Style for SITI OTT) -->
+      <div id="vott-sticky-preview-bar" class="home-sticky-preview-bar" hidden>
+        <section id="vott-dynamic-preview" class="home-dynamic-preview" aria-label="Selected Tile Preview">
+          <div class="dyn-preview-bg">
+            <img id="vott-dyn-preview-img" src="" alt="Backdrop" />
+            <div class="dyn-preview-scrim"></div>
+          </div>
+          <div class="dyn-preview-content">
+            <div id="vott-dyn-preview-badges" class="dyn-preview-badges"></div>
+            <h1 id="vott-dyn-preview-title" class="dyn-preview-title"></h1>
+            <div id="vott-dyn-preview-subtitle" class="dyn-preview-subtitle"></div>
+            <p id="vott-dyn-preview-desc" class="dyn-preview-desc"></p>
+            <div class="dyn-preview-actions">
+              <span class="dyn-preview-ok-badge">▶ Press OK to Watch</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Rows (landscape / portrait / app tiles) rendered from data -->
+      <div id="vott-rails"></div>
+
+    </main>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 3: 1:1 LIVE TV EPG GUIDE WITH PiP VIDEO & MINIMIZABLE TRAY
+       Photos: media_1794042433780_fb2b5940.jpg & media_1794043000956_f4dc0068.jpg
+       ======================================================== -->
+  <div id="screen-epg" class="tv-screen screen-hidden">
+    
+    <!-- Top Metadata & Picture-in-Picture Live Stream Window -->
+    <div class="livetv-top-section">
+      <div class="livetv-meta-pane">
+        <div class="livetv-back-row">
+          <button id="btn-epg-back" class="sub-back-btn screen-back-btn focusable">
+            <span>← Back</span>
+          </button>
+          <div id="livetv-clock-text" class="livetv-clock-line">Current Time : 2:46 PM</div>
+        </div>
+        <h1 id="livetv-show-title" class="livetv-show-title">R Bangla Live 100percent News</h1>
+        <div id="livetv-time-lang" class="livetv-timing-lang">2:00 PM - 2:30 PM | Bengali</div>
+        <div id="livetv-lcn-genre" class="livetv-lcn-genres">LCN : 338 | News | Series</div>
+        <p id="livetv-desc-text" class="livetv-description">Description : The host sheds light on the top stories, recent updates, and latest happenings from the national and international front.</p>
+      </div>
+
+      <!-- Live TV PiP Window on Top Right -->
+      <div class="livetv-pip-window">
+        <div id="pip-video-feed" class="pip-video-feed" style="background-image: url('https://images.unsplash.com/photo-1585829365295-ab7cd400c167?q=80&w=800&auto=format&fit=crop');">
+          <span class="pip-live-ribbon">LIVE</span>
+          <span id="pip-channel-watermark" class="pip-channel-watermark">R. বাংলা</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Matrix: Languages, Genres, Channels & Programs Timeline -->
+    <div class="livetv-bottom-matrix">
+      <!-- Red Current-Time Vertical Indicator Line -->
+      <div id="epg-red-timeline-marker" class="epg-red-timeline-marker"></div>
+
+      <!-- Collapsible Languages & Genres Tray (Minimizes to Image 3) -->
+      <div id="epg-filter-columns-tray" class="epg-filter-columns-tray">
+        <div class="epg-col-pane epg-col-languages">
+          <div class="epg-col-pane-title">Languages</div>
+          <div id="epg-col-languages-items"></div>
+        </div>
+        <div class="epg-col-pane epg-col-genres">
+          <div class="epg-col-pane-title">Genres</div>
+          <div id="epg-col-genres-items"></div>
+        </div>
+      </div>
+
+      <!-- Channels & Programs Timeline Pane -->
+      <div class="epg-schedule-pane">
+        <div class="epg-timeline-header-bar">
+          <button id="epg-channels-header-label" class="epg-channels-header-btn focusable" title="Toggle Tray">
+            Channels
+          </button>
+          <div id="epg-time-slots-row" class="epg-time-slots-container"></div>
+        </div>
+
+        <!-- Scrollable Channel Rows -->
+        <div id="epg-rows-scroll" class="epg-rows-scroll scrollable-content"></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 4: DEDICATED PROFILE ACCOUNT PAGE (1:1 Replica)
+       Exact match to: media_1794044408930_35954b42.jpg
+       ======================================================== -->
+  <div id="screen-profile-account" class="tv-screen screen-hidden">
+    <div class="account-page-container scrollable-content">
+
+      <!-- Back button (top-left) -->
+      <div class="screen-back-row">
+        <button id="btn-account-back" class="sub-back-btn screen-back-btn focusable">
+          <span>← Back</span>
+        </button>
+      </div>
+
+      <!-- Top Row: User Name & Dynamic Subscription Status Button -->
+      <div class="account-top-row">
+        <div class="account-user-name-badge">
+          <div class="account-user-icon-box">👤</div>
+          <span id="account-user-name">Avijit</span>
+        </div>
+        <div class="account-top-actions">
+          <button id="btn-account-contact" class="btn-account-logout btn-account-contact focusable">Contact Us</button>
+          <button id="btn-account-logout" class="btn-account-logout focusable">Log Out</button>
+        </div>
+      </div>
+
+      <!-- User Contact & Login Meta Row -->
+      <div class="account-meta-chips-row">
+        <div class="account-meta-chip">
+          <div class="meta-icon-gold-circle">📞</div>
+          <div class="meta-chip-texts">
+            <span class="meta-chip-label">Mobile</span>
+            <span class="meta-chip-val" id="account-mobile-val">7439467546</span>
+          </div>
+        </div>
+        <div class="account-meta-chip">
+          <div class="meta-icon-gold-circle">✉</div>
+          <div class="meta-chip-texts">
+            <span class="meta-chip-label">Email</span>
+            <span class="meta-chip-val">Email</span>
+          </div>
+        </div>
+        <div class="account-meta-chip">
+          <div class="meta-icon-gold-circle">🕒</div>
+          <div class="meta-chip-texts">
+            <span class="meta-chip-label">Last Login</span>
+            <span class="meta-chip-val" id="account-last-login-val">Nov 06, 2026 01:22 PM</span>
+          </div>
+        </div>
+
+        <!-- Replays the remote guide (js/remote-tutorial.js) -->
+        <button id="btn-account-remote-help" class="btn-account-logout btn-account-remote-help focusable">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="14" r="0.9" fill="currentColor"/><circle cx="14" cy="14" r="0.9" fill="currentColor"/><circle cx="10" cy="17.5" r="0.9" fill="currentColor"/><circle cx="14" cy="17.5" r="0.9" fill="currentColor"/></svg>
+          Remote Help
+        </button>
+      </div>
+
+      <!-- My Subscriptions: CATV / Broadband / OTT & ALTD (each opens a details popup) -->
+      <div class="account-section-heading">My Subscriptions</div>
+      <div class="account-subs-tabs">
+        <button class="account-subs-tab subs-catv focusable default-focus" data-subs="catv">
+          <span class="subs-tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 3l4 4 4-4"/></svg>
+          </span>
+          <span class="subs-tab-text">
+            <span class="subs-tab-title">CATV</span>
+            <span class="subs-tab-sub" id="subs-detail-catv">Subscription</span>
+          </span>
+          <span class="subs-tab-chevron">›</span>
+        </button>
+        <button class="account-subs-tab subs-broadband focusable" data-subs="broadband">
+          <span class="subs-tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M2 9a15 15 0 0 1 20 0"/><circle cx="12" cy="19.5" r="1"/></svg>
+          </span>
+          <span class="subs-tab-text">
+            <span class="subs-tab-title">Broadband</span>
+            <span class="subs-tab-sub" id="subs-detail-broadband">Subscription</span>
+          </span>
+          <span class="subs-tab-chevron">›</span>
+        </button>
+        <button class="account-subs-tab subs-ott focusable" data-subs="ott">
+          <span class="subs-tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>
+          </span>
+          <span class="subs-tab-text">
+            <span class="subs-tab-title">OTT &amp; ALTD</span>
+            <span class="subs-tab-sub" id="subs-detail-ott">Subscription</span>
+          </span>
+          <span class="subs-tab-chevron">›</span>
+        </button>
+      </div>
+
+      <!-- Profile Avatar Section (Synchronized 3 Profiles matching Landing Page) -->
+      <div class="account-section-heading">Profile</div>
+      <div id="account-profiles-row" class="account-avatar-card-row"></div>
+
+      <!-- Manage Device Section -->
+      <div class="account-settings-card">
+        <button id="btn-manage-devices" class="account-settings-link focusable">
+          <span class="settings-gold-title">Manage Device <span class="settings-link-chevron">›</span></span>
+          <span id="account-device-status" class="settings-sub-text">3 devices registered</span>
+        </button>
+      </div>
+
+      <!-- My Languages Section with Set Languages Button -->
+      <div class="account-settings-card">
+        <div>
+          <div id="account-lang-title" class="settings-gold-title">Preferred Languages</div>
+          <div id="account-lang-status" class="settings-sub-text">You Haven't Selected a Language Yet</div>
+        </div>
+        <button id="btn-set-languages" class="btn-settings-gold-border focusable">Set Languages</button>
+      </div>
+
+      <!-- Content Preferences Section with Set Genres Button -->
+      <div class="account-settings-card">
+        <div>
+          <div id="account-genre-title" class="settings-gold-title">Preferred Genre</div>
+          <div id="account-genre-status" class="settings-sub-text">You Haven't Selected a Genre Yet</div>
+        </div>
+        <button id="btn-set-genres" class="btn-settings-gold-border focusable">Set Genres</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL: ACCOUNT INFO POPUP (CATV / Broadband / OTT & ALTD / Manage Device)
+       Shared overlay shown on top of the Profile Account page
+       ======================================================== -->
+  <div id="screen-account-info-modal" class="tv-screen screen-hidden" role="dialog" aria-label="Account details">
+    <div class="acc-info-box">
+      <div class="acc-info-header">
+        <div class="acc-info-title-wrap">
+          <span class="acc-info-icon" id="acc-info-icon">📺</span>
+          <h2 class="acc-info-title" id="acc-info-title">Details</h2>
+        </div>
+        <button id="btn-acc-info-close" class="sub-back-btn focusable"><span>← Back</span></button>
+      </div>
+      <div class="acc-info-body" id="acc-info-body"></div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL: QUICK RECHARGE DIRECT QR MODAL
+       Direct QR to renew existing package for +30 days
+       ======================================================== -->
+  <div id="screen-quick-recharge-modal" class="tv-screen screen-hidden quick-recharge-overlay" role="dialog" aria-label="Quick Recharge QR">
+    <div class="pay-qr-card quick-recharge-card">
+      <div class="pay-card-label" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span>⚡ Quick Recharge</span>
+      </div>
+      <h2 class="pay-qr-title">Scan to Renew <span id="quick-recharge-amount">₹235</span></h2>
+      <p class="pay-qr-sub">Scan using any UPI app to renew <b>30 days</b> on your existing pack</p>
+
+      <div class="quick-recharge-pkg-banner">
+        <div id="quick-recharge-pkg-name" class="quick-recharge-pkg-name">Package 2: SITI Bengali Mega</div>
+        <div class="quick-recharge-pkg-validity">+30 Days Validity Extension</div>
+      </div>
+
+      <button id="btn-quick-recharge-qr" class="pay-qr-box focusable" aria-label="QR code: select to complete recharge">
+        <svg id="quick-recharge-qr-svg" class="pay-qr-svg" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+        <span class="pay-qr-done"><span class="pay-qr-done-tick">✓</span>Recharge successful</span>
+      </button>
+
+      <p class="quick-recharge-hint">Select the QR code or press OK to simulate payment</p>
+
+      <div style="margin-top: 14px;">
+        <button id="btn-quick-recharge-cancel" class="sub-back-btn focusable"><span>← Cancel</span></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       MODAL: SET LANGUAGES & GENRES PICKER
+       ======================================================== -->
+  <div id="screen-set-preferences-modal" class="tv-screen screen-hidden">
+    <div class="pref-modal-box">
+      <h2 id="pref-picker-title" class="pref-modal-title">Select Preferences</h2>
+      <div id="pref-picker-chips-grid" class="pref-modal-chips-grid"></div>
+      <div style="text-align: right;">
+        <button id="btn-save-pref-modal" class="exit-btn exit-btn-no focusable default-focus">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 5: SEARCH SCREEN (Reference Photo 6)
+       ======================================================== -->
+  <div id="screen-search" class="tv-screen screen-hidden">
+    <div class="search-nav-bar">
+      <button id="btn-search-back" class="sub-back-btn screen-back-btn focusable">
+        <span>← Back</span>
+      </button>
+
+      <!-- Selecting the search bar slides the on-screen keyboard in from the left -->
+      <div id="search-input-box" class="search-input-box focusable" tabindex="0" role="button" aria-label="Search box: open the keyboard">
+        <span id="search-input-text" class="search-input-text placeholder-active">Search channels, numbers, genres…</span>
+        <span class="search-mic-icon">🎙</span>
+      </div>
+
+      <!-- Search scope: Vibe TV (channels, default) or Vibe OTT (shows & movies) -->
+      <div class="search-tabs" role="tablist" aria-label="Search in">
+        <button class="search-tab focusable tab-active" data-search-tab="tv" role="tab" aria-selected="true">SITI TV</button>
+        <button class="search-tab focusable" data-search-tab="ott" role="tab" aria-selected="false">SITI OTT</button>
+      </div>
+    </div>
+
+    <div class="search-content-grid">
+      <div class="search-keyboard-container">
+        <div id="tv-search-keyboard"></div>
+      </div>
+
+      <div id="search-right-column" class="search-right-column scrollable-content">
+        <div>
+          <div class="search-section-label">Browse By Language</div>
+          <div id="search-languages-container" class="search-chips-row"></div>
+        </div>
+
+        <div>
+          <div class="search-section-label">Browse By Genre</div>
+          <div id="search-genres-container" class="search-chips-row"></div>
+        </div>
+
+        <div>
+          <div class="search-results-head">
+            <div id="search-results-title" class="search-section-label">Popular Channels</div>
+            <div id="search-results-hint" class="search-results-hint"></div>
+          </div>
+          <div id="search-results" class="search-results-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 6: PLAYER MODAL
+       ======================================================== -->
+  <!-- AD PLAYER (Happy Diwali promo): centred video box with a close button -->
+  <div id="diwali-ad" class="dw-ad" role="dialog" aria-modal="true" aria-label="Happy Diwali ad" hidden></div>
+
+  <div id="screen-player-modal" class="tv-screen screen-hidden">
+    <div class="player-container">
+      <div id="player-video-sim" class="player-video-sim"></div>
+
+      <!-- Player Channel Switch Banner (shown when switching channels) -->
+      <div id="player-channel-banner" class="player-channel-banner" hidden>
+        <div class="pcb-left">
+          <span class="pcb-lcn" id="pcb-lcn">301</span>
+          <div class="pcb-details">
+            <div class="pcb-name" id="pcb-name">Star Sports 1 HD</div>
+            <div class="pcb-prog" id="pcb-prog">India vs New Zealand: 2nd ODI • LIVE</div>
+          </div>
+        </div>
+        <div class="pcb-right">
+          <span class="pcb-live-badge">● LIVE TV</span>
+          <span class="pcb-res-badge">1080p HD</span>
+        </div>
+      </div>
+
+      <!-- ▼ On now: live channels rail (focused channel opens into a details card) -->
+      <div id="player-rail" class="player-rail" hidden>
+        <div class="player-rail-head">
+          <span class="player-rail-title">On now</span>
+          <span class="player-rail-hint">◀ ▶ Browse &nbsp;·&nbsp; OK Watch &nbsp;·&nbsp; ▲ / Back Close</span>
+        </div>
+        <div id="player-rail-row" class="player-rail-row horizontal-rail"></div>
+      </div>
+
+      <!-- ▲ Upcoming Shows: the show on now in detail + what's next on this channel -->
+      <div id="player-upnext" class="player-upnext" hidden></div>
+
+      <div class="player-top-controls">
+        <div>
+          <div id="player-item-title" class="player-meta-title">Live Channel</div>
+          <div id="player-item-sub" class="player-meta-sub">SITI HD</div>
+        </div>
+        <button id="btn-player-close" class="sub-back-btn focusable"><span>← Back</span></button>
+      </div>
+      <!-- Paused indicator, subtitles line, feedback toast, key hint -->
+      <div id="player-paused-icon" class="player-paused-icon" aria-hidden="true">❚❚</div>
+      <div id="player-subtitle" class="player-subtitle" hidden></div>
+      <div id="player-toast" class="player-toast" hidden></div>
+      <div id="player-key-hint" class="player-key-hint" hidden>
+        <span><kbd>OK</kbd> Controls</span>
+        <span><kbd>◀ ▶</kbd> Channels</span>
+        <span><kbd>▼</kbd> On now</span>
+        <span><kbd>▲</kbd> Show details</span>
+      </div>
+
+      <div class="player-bottom-controls">
+        <div class="player-scrubber-bar">
+          <div class="player-scrubber-progress"></div>
+        </div>
+        <div class="player-buttons-strip">
+          <button id="btn-player-playpause" class="player-btn focusable default-focus">⏸ Pause</button>
+          <button id="btn-player-audio" class="player-btn focusable">Audio: Bengali</button>
+          <button id="btn-player-subs" class="player-btn focusable">Subtitles: Off</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 7: EXIT CONFIRMATION MODAL (Reference Photo 2)
+       ======================================================== -->
+  <div id="screen-exit-modal" class="tv-screen screen-hidden">
+    <div class="exit-dialog-card">
+      <h2 class="exit-dialog-title">Exit SITI playtop magic?</h2>
+      <p class="exit-dialog-desc">Come back anytime to enjoy your favourite shows, movies and live TV.</p>
+      <div class="exit-dialog-actions">
+        <button id="btn-exit-yes" class="exit-btn exit-btn-yes focusable">Yes</button>
+        <button id="btn-exit-no" class="exit-btn exit-btn-no focusable default-focus">No</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 7C: CHANNEL NOT IN PACKAGE MODAL
+       Prompted when a user tunes to / selects a channel not in active package
+       ======================================================== -->
+  <div id="screen-channel-lock-modal" class="tv-screen screen-hidden" role="dialog" aria-label="Channel Not in Your Package">
+    <div class="exit-dialog-card ch-lock-dialog-card">
+      <div class="ch-lock-icon-wrap">
+        <span class="ch-lock-icon">🔒</span>
+      </div>
+      <h2 id="ch-lock-title" class="exit-dialog-title">Channel Not in Your Package</h2>
+      <p id="ch-lock-desc" class="exit-dialog-desc">This channel is not included in your active SITI package. Would you like to upgrade or buy a package to watch it?</p>
+      
+      <div class="ch-lock-channel-badge" id="ch-lock-badge">
+        <span class="ch-lock-lcn" id="ch-lock-lcn">CH ---</span>
+        <span class="ch-lock-name" id="ch-lock-name">Live Channel</span>
+      </div>
+
+      <div class="exit-dialog-actions ch-lock-actions">
+        <button id="btn-ch-lock-buy" class="exit-btn exit-btn-yes focusable default-focus">Upgrade Package</button>
+        <button id="btn-ch-lock-cancel" class="exit-btn exit-btn-no focusable">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 7B: LOGIN POPUP (New installers / Guest mode)
+       Reference: Tata Play Smart "Choose how to log in" QR dialog
+       ======================================================== -->
+  <div id="screen-login-modal" class="tv-screen screen-hidden" role="dialog" aria-label="Login">
+    <div class="login-card">
+      <button id="btn-login-goback" class="login-goback-btn focusable">
+        <span class="login-goback-icon">↩</span> Go Back
+      </button>
+
+      <div class="login-header">
+        <img src="assets/vibe_logo.png" alt="VIBE" class="login-logo" />
+        <h2 class="login-title" id="login-title">Log in with your mobile</h2>
+      </div>
+
+      <!-- View M: Registration with mobile number (default for new users) -->
+      <div class="login-view" id="login-view-mobile">
+        <div class="reg-row">
+          <div class="reg-left">
+            <span class="login-step-tag" id="reg-step-tag">STEP 1 OF 2</span>
+            <p class="reg-label" id="reg-label">Enter your mobile number</p>
+            <div class="reg-input" id="reg-input">
+              <span class="reg-prefix" id="reg-prefix">+91</span>
+              <span class="reg-value" id="reg-value"></span><span class="reg-caret"></span>
+              <span class="reg-placeholder" id="reg-placeholder">10-digit mobile number</span>
+            </div>
+            <p class="reg-hint" id="reg-hint">We will send a one-time password (OTP) to this number</p>
+            <p class="reg-error" id="reg-error"></p>
+            <div class="reg-actions">
+              <button id="btn-reg-submit" class="reg-submit-btn focusable">Get OTP</button>
+              <button id="btn-reg-use-qr" class="reg-link-btn focusable">Log in with QR code instead</button>
+            </div>
+          </div>
+          <div class="reg-keypad" id="reg-keypad">
+            <button class="reg-key focusable default-focus" data-key="1">1</button>
+            <button class="reg-key focusable" data-key="2">2</button>
+            <button class="reg-key focusable" data-key="3">3</button>
+            <button class="reg-key focusable" data-key="4">4</button>
+            <button class="reg-key focusable" data-key="5">5</button>
+            <button class="reg-key focusable" data-key="6">6</button>
+            <button class="reg-key focusable" data-key="7">7</button>
+            <button class="reg-key focusable" data-key="8">8</button>
+            <button class="reg-key focusable" data-key="9">9</button>
+            <button class="reg-key reg-key-fn focusable" data-key="clear">Clear</button>
+            <button class="reg-key focusable" data-key="0">0</button>
+            <button class="reg-key reg-key-fn focusable" data-key="del" aria-label="Delete">⌫</button>
+          </div>
+        </div>
+        <p class="login-legal">By proceeding, you are accepting the <b>License Agreement</b></p>
+      </div>
+
+      <!-- View A: QR + code login -->
+      <div class="login-view" id="login-view-qr">
+        <div class="login-qr-row">
+          <div class="login-steps">
+            <span class="login-step-tag">STEP 1</span>
+            <p class="login-step-text">Use your mobile camera to scan the QR code<br>or go to <b>sitiplaytop.com/mytv</b></p>
+            <span class="login-step-tag">STEP 2</span>
+            <p class="login-step-text">Confirm the code on your mobile after scanning</p>
+            <div class="login-code" id="login-code">06739M</div>
+            <button id="btn-login-refresh" class="login-refresh-btn focusable default-focus">
+              <span class="login-refresh-icon">⟳</span> Refresh Code <span class="login-refresh-time" id="login-refresh-time">05:00</span>
+            </button>
+            <button id="btn-login-use-mobile" class="reg-link-btn focusable">Register with mobile number instead</button>
+          </div>
+          <button id="btn-login-qr" class="login-qr-box focusable" aria-label="QR code">
+            <svg id="login-qr-svg" class="login-qr-svg" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+            <div class="login-qr-confirmed"><span>✓</span>Confirmed on mobile</div>
+          </button>
+        </div>
+
+        <p class="login-legal">By proceeding, you are accepting the <b>License Agreement</b></p>
+      </div>
+
+      <!-- View C: Success -->
+      <div class="login-view login-view-hidden" id="login-view-success">
+        <div class="login-success-tick">✓</div>
+        <p class="login-success-title">You're logged in!</p>
+        <p class="login-success-sub">Setting up your profiles…</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 8: SUBSCRIPTION PACKAGES STORE (1:1 Replica)
+       Reference: media_1794046816559_85d5339f.jpg
+       ======================================================== -->
+  <!-- ========================================================
+       SCREEN: PAYMENT (Proceed to Pay → Click to Pay → Success)
+       ======================================================== -->
+  <div id="screen-payment" class="tv-screen screen-hidden" aria-label="Payment">
+    <div class="sub-store-top-bar">
+      <button id="btn-pay-back" class="sub-back-btn focusable">
+        <span>← Back</span>
+      </button>
+      <div class="sub-store-top-title">
+        <span class="sub-title-tv-icon">🔒</span>
+        <span>Secure Payment</span>
+      </div>
+    </div>
+
+    <!-- Checkout view -->
+    <div id="pay-view-checkout" class="pay-body">
+      <section class="pay-card pay-summary">
+        <div class="pay-card-label">Order Summary</div>
+        <div class="pay-pkg-head">
+          <div id="pay-pkg-icon" class="pay-pkg-icon">P2</div>
+          <div>
+            <div id="pay-pkg-number" class="pay-pkg-number">Package 2</div>
+            <div id="pay-pkg-name" class="pay-pkg-name">SITI Bengali Mega</div>
+          </div>
+          <span id="pay-pkg-tag" class="pay-pkg-tag">Popular</span>
+        </div>
+        <div class="pay-rows">
+          <div class="pay-row"><span>TV Channels</span><b id="pay-channels">—</b></div>
+          <div class="pay-row"><span>OTT Apps</span><b id="pay-otts">—</b></div>
+          <div class="pay-row"><span>Devices</span><b id="pay-devices">—</b></div>
+          <div class="pay-row"><span>Validity</span><b>30 days</b></div>
+        </div>
+        <div id="pay-ott-chips" class="pay-ott-chips"></div>
+        <div class="pay-bill">
+          <div class="pay-row"><span>Pack price</span><b id="pay-price">—</b></div>
+          <div class="pay-row"><span>GST (18%)</span><b id="pay-gst">—</b></div>
+          <div class="pay-row pay-total"><span>Total payable</span><b id="pay-total">—</b></div>
+        </div>
+      </section>
+
+      <section class="pay-card pay-action">
+        <div class="pay-card-label">Payment</div>
+        <div class="pay-amount-label">Amount to pay</div>
+        <div id="pay-amount-big" class="pay-amount-big">₹0</div>
+        <div class="pay-billed-to">
+          <span>Billed to</span>
+          <b id="pay-billed-to">—</b>
+        </div>
+
+        <div id="pay-action-idle" class="pay-action-idle">
+          <button id="btn-click-to-pay" class="btn-click-to-pay focusable default-focus">
+            <span class="pay-btn-icon">⚡</span> Click to Pay
+          </button>
+          <p class="pay-note">Demo checkout. No real money is charged.</p>
+        </div>
+
+        <div id="pay-action-processing" class="pay-action-processing" hidden>
+          <span class="pay-spinner"></span>
+          <span>Processing payment…</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Success view -->
+    <div id="pay-view-success" class="pay-success" hidden>
+      <div class="pay-success-check">
+        <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" /><path d="M14 27 l8 8 l16 -17" /></svg>
+      </div>
+      <h1 class="pay-success-title">Successfully Purchased!</h1>
+      <p id="pay-success-sub" class="pay-success-sub">Your plan is now active.</p>
+      <div class="pay-receipt">
+        <div class="pay-row"><span>Plan</span><b id="pay-r-plan">—</b></div>
+        <div class="pay-row"><span>Amount paid</span><b id="pay-r-amount">—</b></div>
+        <div class="pay-row"><span>Transaction ID</span><b id="pay-r-txn" class="pay-mono">—</b></div>
+        <div class="pay-row"><span>Valid till</span><b id="pay-r-valid">—</b></div>
+      </div>
+      <p id="pay-redirect-note" class="pay-success-sub pay-redirect-note">Taking you to Home in 5s…</p>
+      <div class="pay-success-actions">
+        <button id="btn-pay-goto-home" class="btn-click-to-pay focusable">Start Watching</button>
+        <button id="btn-pay-goto-profile" class="cp-btn cp-btn-ghost focusable">View in My Profile</button>
+      </div>
+    </div>
+
+    <!-- Scan & Pay popup: opened by Click to Pay. Selecting the QR completes the (demo) payment. -->
+    <div id="pay-qr-modal" class="pay-qr-overlay" hidden role="dialog" aria-label="Scan to pay">
+      <div class="pay-qr-card">
+        <div class="pay-card-label">Scan &amp; Pay</div>
+        <h2 class="pay-qr-title">Scan to pay <span id="pay-qr-amount">₹0</span></h2>
+        <p class="pay-qr-sub">Use any UPI app on your phone</p>
+
+        <button id="btn-pay-qr" class="pay-qr-box focusable" aria-label="QR code: select to complete the payment">
+          <svg id="pay-qr-svg" class="pay-qr-svg" viewBox="0 0 29 29" shape-rendering="crispEdges"></svg>
+          <span class="pay-qr-done"><span class="pay-qr-done-tick">✓</span>Payment received</span>
+        </button>
+
+        <p id="pay-qr-pkg" class="pay-qr-pkg">Package</p>
+
+        <button id="btn-pay-qr-cancel" class="sub-back-btn focusable"><span>← Back</span></button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="screen-subscription" class="tv-screen screen-hidden">
+    <!-- Top Bar: Back button + Title -->
+    <div class="sub-store-top-bar">
+      <button id="btn-sub-store-back" class="sub-back-btn focusable">
+        <span>← Back</span>
+      </button>
+      <div class="sub-store-top-title">
+        <span class="sub-title-tv-icon">📺</span>
+        <span>Subscribe to SITI Packages & watch on Smart TV and Mobile</span>
+      </div>
+    </div>
+
+    <!-- Store Body: Left Grid of 8 Packages + Right Details Card -->
+    <div class="sub-store-body">
+      <!-- Left Side: Package Cards (dynamically rendered for no-package vs subscribed) -->
+      <div class="sub-packages-column scrollable-content" id="sub-packages-column">
+        <div id="sub-packages-content">
+          <div class="sub-packages-heading">
+            <h2 class="sub-heading-text">Select your package for channels & OTTs</h2>
+            <p class="sub-heading-sub">Choose from 8 curated packs with high-definition channels and bundled OTT apps</p>
+            <!-- Shown when the store is opened for one OTT partner (SITI OTT → locked app / content) -->
+            <div id="sub-filter-note" class="sub-filter-note" hidden>
+              <span id="sub-filter-note-text"></span>
+              <button id="btn-sub-show-all" class="sub-filter-show-all focusable">Show all packages</button>
+            </div>
+          </div>
+          <div id="sub-packages-grid" class="sub-packages-grid">
+            <!-- Dynamic Package Cards rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Details of Selected Package ("Based on your selection") -->
+      <div class="sub-details-column">
+        <div class="sub-summary-card">
+          <div class="sub-summary-tag">Based on your selection</div>
+          
+          <div class="sub-summary-meta">
+            <div id="sub-card-channels-count" class="sub-summary-channels">319 TV Channels</div>
+            <div id="sub-card-devices" class="sub-summary-device">1 Device at a time</div>
+            <div id="sub-card-price" class="sub-summary-price">₹199<span class="price-cycle">/month</span></div>
+          </div>
+
+          <div class="sub-summary-divider"></div>
+
+          <!-- Included Channels Categories breakdown -->
+          <div class="sub-summary-section-label">Included Channels</div>
+          <div id="sub-summary-cats" class="sub-summary-cats-text">
+            Entertainment • Movies • Sports • Kids • News • Knowledge & Lifestyle • Music
+          </div>
+
+          <!-- Included OTT Apps Row -->
+          <div class="sub-summary-section-label" style="margin-top: 14px;">Included OTT Apps</div>
+          <div id="sub-summary-ott-chips" class="sub-summary-ott-row"></div>
+
+          <!-- Action Buttons -->
+          <div class="sub-summary-actions">
+            <button id="btn-view-all-benefits" class="btn-sub-view-benefits focusable">
+              View All Benefits
+            </button>
+            <button id="btn-sub-proceed-pay" class="btn-sub-proceed-pay focusable">
+              <span>Proceed to Pay</span>
+              <span class="btn-arrow-icon">→</span>
+            </button>
+          </div>
+
+          <!-- Mobile QR Helper -->
+          <div class="sub-summary-footer-note">
+            <span>Prefer using your phone instead?</span>
+            <span class="sub-qr-link">Subscribe via Mobile</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 8B: SEPARATE PLAN BENEFITS & CHANNELS/OTT DETAILS PAGE
+       1:1 Replica from media_1794046783136_d5118588.jpg & media_1794046804012_b9bccfbd.jpg
+       ======================================================== -->
+  <div id="screen-plan-benefits" class="tv-screen screen-hidden">
+    <!-- Top Bar: Back button + Plan Channels Title -->
+    <div class="benefits-top-bar">
+      <button id="btn-benefits-back" class="sub-back-btn focusable">
+        <span>← Back</span>
+      </button>
+      <h1 id="benefits-header-title" class="benefits-header-title">319 TV Channels</h1>
+    </div>
+
+    <div class="benefits-layout-body">
+      <!-- Left Sidebar: Browse by Category -->
+      <div class="benefits-categories-sidebar">
+        <div class="benefits-sidebar-label">Browse by category</div>
+        <div id="benefits-categories-list" class="benefits-categories-list">
+          <!-- Dynamic categories: Entertainment (9), Movies (8), Sports (5), Kids (13), News (19), Knowledge & Lifestyle (9), Music (3), OTT Apps (8), Free on SITI (253) -->
+        </div>
+      </div>
+
+      <!-- Right Main Area: Language filter chips + Channels / OTT Grid -->
+      <div class="benefits-content-area scrollable-content">
+        <!-- Language Filter Chips Row -->
+        <div class="benefits-lang-filter-row">
+          <span class="benefits-filter-label">Filter by Language</span>
+          <div id="benefits-lang-chips" class="benefits-lang-chips">
+            <button class="benefits-lang-pill focusable active" data-lang="All">All</button>
+            <button class="benefits-lang-pill focusable" data-lang="Hindi">Hindi</button>
+            <button class="benefits-lang-pill focusable" data-lang="Bengali">Bengali</button>
+            <button class="benefits-lang-pill focusable" data-lang="English">English</button>
+          </div>
+        </div>
+
+        <!-- Category Title with Count -->
+        <h2 id="benefits-active-category-title" class="benefits-cat-title">Entertainment (9)</h2>
+
+        <!-- Grid of Channel Tiles or OTT Cards -->
+        <div id="benefits-items-grid" class="benefits-items-grid">
+          <!-- Dynamic Channel Cards with Logo, Name, and LCN (Ch. 141) -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom pay bar: shown only when opened from the store via "View All Benefits" -->
+    <div id="benefits-pay-bar" class="benefits-pay-bar benefits-pay-hidden">
+      <div id="benefits-pay-summary" class="benefits-pay-summary"></div>
+      <button id="btn-benefits-proceed-pay" class="btn-sub-proceed-pay benefits-pay-btn">
+        <span>Proceed to Pay</span>
+        <span class="btn-arrow-icon">→</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       SCREEN 9: HELP & EXPANDABLE FAQ ACCORDION MODAL
+       ======================================================== -->
+  <div id="screen-help-modal" class="tv-screen screen-hidden">
+    <div class="help-modal-box">
+      <div class="help-header-bar">
+        <h2 class="help-title-text">Frequently Asked Questions</h2>
+        <span class="help-helpline-tag">Helpline: 1800-123-4567</span>
+      </div>
+
+      <div id="help-faq-scroll" class="help-faq-scroll scrollable-content"></div>
+
+      <div class="help-modal-footer">
+        <button id="btn-help-remote-guide" class="sub-back-btn help-remote-guide-btn focusable"><span>How to use your remote</span></button>
+        <button id="btn-help-close" class="sub-back-btn focusable"><span>← Back</span></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       CHANNEL TUNING / LCN OSD (On-Screen Display)
+       Shown when typing LCN numbers or clicking remote numpad
+       ======================================================== -->
+  <div id="lcn-tune-osd" class="lcn-tune-osd" hidden>
+    <div class="lcn-osd-inner">
+      <div class="lcn-osd-top">
+        <span class="lcn-osd-badge">LCN</span>
+        <span class="lcn-osd-digits" id="lcn-osd-digits">---</span>
+        <span class="lcn-osd-status-pill" id="lcn-osd-status">ENTERING LCN...</span>
+      </div>
+      <div class="lcn-osd-channel-meta" id="lcn-osd-meta">
+        <span class="lcn-osd-ch-name" id="lcn-osd-ch-name">Live Channel</span>
+        <span class="lcn-osd-ch-genre" id="lcn-osd-ch-genre">Enter 3-digit Channel Number</span>
+      </div>
+      <div class="lcn-osd-progress-track">
+        <div class="lcn-osd-progress-bar" id="lcn-osd-progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       VIRTUAL REMOTE WIDGET (Minimalistic)
+       ======================================================== -->
+  <aside id="virtual-remote-widget" class="virtual-remote-widget" aria-label="Remote Controller"></aside>
+
+  <!-- ========================================================
+       REMOTE GUIDE (first-time coach marks after mobile registration)
+       Built by js/remote-tutorial.js
+       ======================================================== -->
+  <div id="screen-remote-tutorial" class="screen-hidden" role="dialog" aria-modal="true" aria-label="How to use your remote"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/tv-engine.js"></script>
+  <script src="js/remote-tutorial.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

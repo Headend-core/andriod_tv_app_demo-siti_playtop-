@@ -1,0 +1,226 @@
+/* ==========================================================
+   MOTION — app-wide animation polish (loaded last)
+
+   Performance rules followed here:
+   - only transform and opacity are animated continuously or on scroll
+     (GPU-composited); no filters on many tiles, no looping box-shadow
+   - the focus glow plays once when a tile gets focus, then holds
+   - everything respects "reduce motion"
+   ========================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);   /* fast start, soft landing */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1); /* tiny overshoot */
+}
+
+/* ---------- Hero slide dots: pill countdown ---------- */
+.hero-carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: none;
+  cursor: pointer;
+  transition: width 0.45s var(--ease-out), background-color 0.3s ease, transform 0.3s var(--ease-out);
+}
+.hero-dot:hover { background-color: rgba(255, 255, 255, 0.6); }
+.hero-dot.dot-done { background-color: rgba(255, 255, 255, 0.55); }
+
+.hero-dot.dot-active {
+  width: 38px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: none;
+}
+/* the fill: grows left → right over the slide's time on screen */
+.hero-dot.dot-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #FF2FB3, #8B5CF6);
+  box-shadow: 0 0 10px rgba(255, 47, 179, 0.6);
+  transform-origin: left center;
+  transform: scaleX(1);
+}
+.hero-dot.dot-active.dot-filling::after {
+  animation: heroDotFill var(--hero-interval, 4s) linear both;
+}
+@keyframes heroDotFill {
+  from { transform: scaleX(0.04); }
+  to   { transform: scaleX(1); }
+}
+
+/* ---------- Tile focus: unhurried glide, lift, one-shot glow, light sweep ----------
+   Focus moves feel deliberate: the new tile lifts and grows over ~0.5s,
+   neighbours glide aside on the same curve, the old tile settles back a
+   touch slower, and the rail scroll (tv-engine easeScroll) runs ~0.5s too. */
+:root {
+  --ease-glide: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+#screen-home .media-card,
+#screen-home .channel-square-card {
+  transition: transform 0.55s var(--ease-glide),
+              opacity 0.45s ease,
+              border-color 0.3s ease;
+}
+#screen-home .media-card.tv-focused,
+#screen-home .channel-square-card.tv-focused {
+  transition: transform 0.5s var(--ease-glide),
+              opacity 0.3s ease,
+              border-color 0.25s ease;
+}
+/* small lift on top of the existing zoom */
+#screen-home .media-card.tv-focused:not(#_m1) {
+  transform: translateY(-6px) scale(1.2) !important;
+}
+#screen-home .rail-square .channel-square-card.tv-focused:not(#_m1) {
+  transform: translateY(-6px) scale(1.25) !important;
+}
+/* OK press: quick dip, then back to the lifted state */
+#screen-home .media-card.tv-focused.tv-pressed:not(#_m1):not(#_m2),
+#screen-home .rail-square .channel-square-card.tv-focused.tv-pressed:not(#_m1):not(#_m2) {
+  transform: translateY(-2px) scale(1.12) !important;
+  transition-duration: 0.08s !important;
+}
+/* neighbours step back with opacity (cheap) instead of a brightness filter */
+#screen-home .rail-scroll-row:has(.tv-focused) .media-card:not(.tv-focused) {
+  filter: none;
+  opacity: 0.68;
+}
+/* artwork drifts in slowly inside the focused frame */
+#screen-home .media-card .card-thumb-wrap img {
+  transition: transform 0.9s var(--ease-glide);
+}
+#screen-home .media-card.tv-focused .card-thumb-wrap img {
+  transform: scale(1.07);
+}
+/* text under the tile rises in */
+#screen-home .media-card .card-title,
+#screen-home .media-card .card-meta,
+#screen-home .media-card .card-info {
+  transition: transform 0.5s var(--ease-glide), opacity 0.4s ease;
+}
+#screen-home .media-card.tv-focused .card-info {
+  transform: translateY(-2px);
+}
+
+/* Glow blooms once on focus and then holds (replaces the endless pulse,
+   which repainted the focused tile every frame) */
+@keyframes tvTileGlowPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0),
+                0 0 0 rgba(255, 47, 179, 0),
+                0 6px 16px rgba(0, 0, 0, 0.5);
+  }
+  55% {
+    box-shadow: 0 0 0 3px #FFFFFF,
+                0 0 30px rgba(255, 47, 179, 0.55),
+                0 14px 30px rgba(0, 0, 0, 0.85);
+  }
+  100% {
+    box-shadow: 0 0 0 2.5px #FFFFFF,
+                0 0 20px rgba(255, 47, 179, 0.35),
+                0 12px 28px rgba(0, 0, 0, 0.8);
+  }
+}
+.tv-focused:not(#_m1):not(#_m2) {
+  animation-duration: 0.7s !important;
+  animation-iteration-count: 1 !important;
+  animation-fill-mode: both !important;
+  animation-timing-function: var(--ease-out) !important;
+}
+
+/* Light sweep across the artwork when a tile is focused (transform only) */
+#screen-home .media-card .card-thumb-wrap,
+#screen-home .media-card .channel-square-logo {
+  position: relative;
+  overflow: hidden;
+}
+#screen-home .media-card .card-thumb-wrap::after,
+#screen-home .media-card .channel-square-logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 60%;
+  pointer-events: none;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-120%) skewX(-12deg);
+  opacity: 0;
+}
+#screen-home .media-card.tv-focused .card-thumb-wrap::after,
+#screen-home .media-card.tv-focused .channel-square-logo::after {
+  animation: tileSweep 1s 0.22s var(--ease-out) both;
+}
+@keyframes tileSweep {
+  0%   { transform: translateX(-120%) skewX(-12deg); opacity: 1; }
+  100% { transform: translateX(260%) skewX(-12deg); opacity: 1; }
+}
+
+/* ---------- Buttons: springy focus, press feedback ---------- */
+.focusable {
+  transition: transform 0.4s var(--ease-spring),
+              border-color 0.25s ease,
+              box-shadow 0.35s ease,
+              background-color 0.2s ease,
+              color 0.2s ease,
+              opacity 0.2s ease;
+}
+.btn-watch-now.tv-focused {
+  transform: scale(1.06);
+}
+.tv-pressed:not(#_m1) {
+  transform: scale(0.95) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ---------- Left menu: icons nudge, labels slide in ---------- */
+.nav-item .nav-icon {
+  transition: transform 0.3s var(--ease-spring);
+}
+.nav-item.tv-focused .nav-icon {
+  transform: scale(1.15);
+}
+.side-navigation .nav-text {
+  transition: opacity 0.25s ease 0.06s, transform 0.3s var(--ease-out) 0.06s;
+}
+.side-navigation:not(.nav-expanded):not(:focus-within) .nav-text {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* ---------- Screens: soft fade + settle when a screen opens ---------- */
+@keyframes vibeScreenIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.tv-screen.screen-active:not(#screen-splash) {
+  animation: vibeScreenIn 0.4s var(--ease-out);
+}
+
+/* ---------- Rails: headings slide in with the rail ---------- */
+.rail-heading::before {
+  transition: height 0.3s var(--ease-out), box-shadow 0.3s ease;
+}
+.content-rail:has(.tv-focused) .rail-heading::before {
+  height: 1.3em;
+  box-shadow: 0 0 16px rgba(255, 47, 179, 0.9);
+}
+
+/* ---------- Respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

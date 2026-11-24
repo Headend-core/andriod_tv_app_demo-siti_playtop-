@@ -1,0 +1,138 @@
+/**
+ * VIBE PlayTop Magic - Core Design System & TV Stylesheet
+ * Authentic Android TV UI with VIBE PlayTop Brand Colors
+ */
+
+:root {
+  /* VIBE PlayTop Official Brand Colors */
+  --vibe-red: #E51B24;
+  --vibe-red-hover: #ff2a34;
+  --vibe-blue: #0084FF;
+  --vibe-gold: #FFB300;
+  
+  /* Android TV Dark Theme Palette - Pure Black */
+  --tv-bg-dark: #000000;
+  --tv-surface: #0A0A0A;
+  --tv-surface-card: #0F0F0F;
+  --tv-surface-hover: #181818;
+  --tv-nav-bg: #000000;
+  --tv-border: rgba(255, 255, 255, 0.1);
+  --tv-border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Android TV 10-Foot Focus State */
+  --tv-focus-border: #FFFFFF;
+  --tv-focus-glow: 0 0 0 2.5px #FFFFFF, 0 0 12px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.3), 0 10px 24px rgba(0, 0, 0, 0.8);
+  
+  /* Typography */
+  --text-white: #FFFFFF;
+  --text-gray: #94A3B8;
+  --text-muted: #64748B;
+  
+  /* Metrics */
+  --header-height: 76px;
+  --nav-width: 80px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Roboto', sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  color: var(--text-white);
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+/* TV Viewport Screen Manager */
+.tv-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.screen-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: scale(0.99);
+}
+
+.screen-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(1);
+}
+
+/* Global 10-Foot D-Pad Focus Styling */
+.focusable {
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), 
+              border-color 0.2s ease, 
+              box-shadow 0.2s ease,
+              background-color 0.2s ease;
+  position: relative;
+}
+
+/* Refined, Lighter TV Tile Focus Glow Keyframes */
+@keyframes tvTileGlowPulse {
+  0%, 100% {
+    border-color: #FFFFFF !important;
+    box-shadow: 
+      0 0 0 2.5px #FFFFFF,
+      0 0 10px rgba(255, 255, 255, 0.55),
+      0 0 20px rgba(255, 255, 255, 0.25),
+      0 10px 24px rgba(0, 0, 0, 0.8) !important;
+  }
+  50% {
+    border-color: #FFFFFF !important;
+    box-shadow: 
+      0 0 0 3px #FFFFFF,
+      0 0 14px rgba(255, 255, 255, 0.75),
+      0 0 28px rgba(255, 255, 255, 0.38),
+      0 12px 28px rgba(0, 0, 0, 0.85) !important;
+  }
+}
+
+.focusable.tv-focused,
+.focusable:focus-visible {
+  transform: scale(1.06);
+  z-index: 30;
+  border-color: var(--tv-focus-border) !important;
+  box-shadow: var(--tv-focus-glow) !important;
+}
+
+.tv-pressed {
+  transform: scale(0.98) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}

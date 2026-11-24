@@ -1,0 +1,462 @@
+/**
+ * VIBE PlayTop Magic - Create Profile (first registration & Add Profile)
+ * 4 steps: Name → Avatar → Languages → Genres, with a live preview card.
+ */
+
+#screen-create-profile {
+  background: #000000;
+}
+
+.cp-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 64px 40px;
+}
+
+/* ---------- Header ---------- */
+.cp-header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.cp-logo {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+.cp-header-text { flex: 1; min-width: 0; }
+
+.cp-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cp-subtitle {
+  margin-top: 4px;
+  font-size: 1.02rem;
+  color: var(--text-gray);
+}
+
+.cp-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-step-dot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.cp-step-dot .cp-step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  color: var(--text-muted);
+}
+
+.cp-step-dot.is-current { color: #FFFFFF; }
+.cp-step-dot.is-current .cp-step-num {
+  border-color: var(--vibe-red);
+  background: var(--vibe-red);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px rgba(229, 27, 36, 0.55);
+}
+
+.cp-step-dot.is-done .cp-step-num {
+  border-color: #22C55E;
+  background: rgba(34, 197, 94, 0.18);
+  color: #4ADE80;
+}
+
+.cp-step-line {
+  width: 22px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ---------- Body ---------- */
+.cp-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 36px;
+}
+
+.cp-step-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(17, 23, 38, 0.82);
+  border: 1px solid var(--tv-border);
+  border-radius: 18px;
+  padding: 28px 32px;
+}
+
+.cp-step-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.cp-step-hint {
+  margin-top: 6px;
+  font-size: 0.98rem;
+  color: var(--text-gray);
+  min-height: 1.4em;
+  transition: color 0.2s ease;
+}
+
+.cp-step-hint.cp-hint-error { color: #FF6B72; }
+
+.cp-step-content {
+  flex: 1;
+  min-height: 0;
+  margin-top: 22px;
+  overflow-y: auto;
+}
+
+.cp-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.cp-btn {
+  min-width: 150px;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cp-btn-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #E2E8F0;
+}
+
+.cp-btn-primary {
+  background: var(--vibe-red);
+  color: #FFFFFF;
+}
+
+.cp-btn.tv-focused {
+  transform: scale(1.06);
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.65);
+}
+
+.cp-btn.cp-btn-hidden { visibility: hidden; }
+
+/* ---------- Step 1: name + keyboard ---------- */
+.cp-name-field {
+  display: flex;
+  align-items: center;
+  height: 58px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: #0B1120;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.cp-name-field .cp-name-placeholder { color: var(--text-muted); font-weight: 600; }
+
+.cp-name-caret {
+  width: 2px;
+  height: 30px;
+  margin-left: 3px;
+  background: var(--vibe-red);
+  animation: cpCaret 1s steps(1) infinite;
+}
+
+@keyframes cpCaret { 50% { opacity: 0; } }
+
+.cp-name-count {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.cp-keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+.cp-key {
+  height: 46px;
+  border-radius: 8px;
+  background: #182238;
+  border: 1px solid var(--tv-border);
+  color: #E2E8F0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cp-key.cp-key-wide { grid-column: span 3; }
+.cp-key.cp-key-mid  { grid-column: span 2; }
+
+.cp-key.tv-focused {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Step 2: avatar selection ---------- */
+.cp-avatar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 22px;
+  padding: 10px 8px 24px;
+  max-width: 700px;
+}
+
+.cp-avatar-option {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  min-width: 96px;
+  min-height: 96px;
+  border-radius: 50% !important;
+  border: 3px solid rgba(255, 255, 255, 0.22);
+  padding: 0;
+  background: #0B0E17;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cp-avatar-option .cp-avatar-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden !important;
+  position: relative;
+  background: #141B2D;
+}
+
+.cp-avatar-option .cp-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center center;
+  display: block;
+}
+
+.cp-avatar-option.is-selected {
+  border-color: #22C55E !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4), 0 0 16px rgba(34, 197, 94, 0.45);
+}
+
+.cp-avatar-option.is-selected::after {
+  content: "✓";
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% !important;
+  background: #22C55E;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  z-index: 5;
+}
+
+.cp-avatar-option.tv-focused {
+  border-color: #FFFFFF !important;
+  transform: scale(1.14);
+  box-shadow: 0 0 0 3px #FFFFFF, 0 0 14px rgba(255, 255, 255, 0.75), 0 0 28px rgba(255, 255, 255, 0.38), 0 10px 24px rgba(0, 0, 0, 0.85) !important;
+  z-index: 10;
+}
+
+.cp-avatar-option.is-selected.tv-focused {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 0 3.5px #FFFFFF, 0 0 16px rgba(255, 255, 255, 0.85), 0 0 32px rgba(255, 255, 255, 0.45), 0 12px 28px rgba(0, 0, 0, 0.85) !important;
+}
+
+/* ---------- Steps 3 & 4: chips ---------- */
+.cp-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.cp-chip {
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #182238;
+  border: 2px solid var(--tv-border);
+  color: var(--text-gray);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cp-chip.chip-active {
+  background: rgba(229, 27, 36, 0.18);
+  border-color: var(--vibe-red);
+  color: #FFFFFF;
+}
+
+.cp-chip.tv-focused {
+  background: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+  color: #000000 !important;
+  transform: scale(1.06);
+}
+
+/* ---------- Preview card ---------- */
+.cp-preview {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(17, 23, 38, 0.82);
+  border: 1px solid var(--tv-border);
+  border-radius: 18px;
+  padding: 24px 22px;
+}
+
+.cp-preview-label {
+  align-self: flex-start;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cp-preview-avatar {
+  width: 128px;
+  height: 128px;
+  margin: 18px 0 14px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 10px 30px rgba(0, 0, 0, 0.7);
+  overflow: hidden !important;
+  background: #111827;
+  transition: all 0.25s ease;
+}
+
+.cp-preview-avatar img,
+.cp-preview-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center center;
+  display: block;
+}
+
+.cp-preview-avatar svg { width: 72%; height: 72%; }
+
+.cp-preview-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-align: center;
+  word-break: break-word;
+  margin-bottom: 20px;
+}
+
+.cp-preview-name.is-empty { color: var(--text-muted); }
+
+.cp-preview-group {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.cp-preview-group-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.cp-preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cp-preview-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #E2E8F0;
+}
+
+.cp-preview-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Toast on the profile pickers after creating a profile ---------- */
+.cp-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translate(-50%, 20px);
+  z-index: 9999;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: #16A34A;
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.cp-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

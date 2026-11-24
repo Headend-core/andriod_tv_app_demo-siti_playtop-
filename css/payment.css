@@ -1,0 +1,453 @@
+/**
+ * VIBE PlayTop Magic - Payment page (Proceed to Pay → Click to Pay → Success)
+ */
+
+#screen-payment {
+  display: flex;
+  flex-direction: column;
+  background: #000000;
+}
+
+#screen-payment [hidden] { display: none !important; }
+
+/* ---------- Checkout ---------- */
+.pay-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 32px;
+  padding: 28px 56px 36px;
+}
+
+.pay-card { background: #0A0A0A;
+  border: 1px solid var(--tv-border);
+  border-radius: 18px;
+  padding: 26px 30px;
+}
+
+.pay-card-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.pay-summary {
+  flex: 1.25;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.pay-pkg-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.pay-pkg-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: var(--vibe-blue);
+  flex-shrink: 0;
+}
+
+.pay-pkg-number {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-gray);
+}
+
+.pay-pkg-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.pay-pkg-tag {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: rgba(255, 210, 0, 0.14);
+  color: #FFD200;
+  white-space: nowrap;
+}
+
+.pay-rows,
+.pay-bill,
+.pay-receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pay-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 1.02rem;
+  color: var(--text-gray);
+}
+
+.pay-row b {
+  color: #FFFFFF;
+  font-weight: 700;
+  text-align: right;
+}
+
+.pay-ott-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 6px;
+}
+
+.pay-ott-chip {
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #E2E8F0;
+}
+
+.pay-bill {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.16);
+}
+
+.pay-row.pay-total {
+  margin-top: 4px;
+  font-size: 1.2rem;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.pay-row.pay-total b { color: #34D399; font-size: 1.35rem; }
+
+.pay-action {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-amount-label {
+  font-size: 1rem;
+  color: var(--text-gray);
+}
+
+.pay-amount-big {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 4px 0 18px;
+}
+
+.pay-billed-to {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--tv-border);
+  color: var(--text-gray);
+}
+
+.pay-billed-to b { color: #FFFFFF; }
+
+.pay-action-idle,
+.pay-action-processing {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.btn-click-to-pay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #FFFFFF;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(16, 185, 129, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-click-to-pay.tv-focused {
+  transform: scale(1.04);
+  border-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 0 30px rgba(16, 185, 129, 0.7);
+}
+
+.pay-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pay-action-processing {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #A7F3D0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.pay-spinner {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid rgba(167, 243, 208, 0.25);
+  border-top-color: #34D399;
+  animation: paySpin 0.8s linear infinite;
+}
+
+@keyframes paySpin { to { transform: rotate(360deg); } }
+
+/* ---------- Success ---------- */
+.pay-success {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 40px 40px;
+  animation: payPop 0.4s ease;
+}
+
+@keyframes payPop {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.pay-success-check svg {
+  width: 96px;
+  height: 96px;
+}
+
+.pay-success-check circle {
+  fill: rgba(16, 185, 129, 0.15);
+  stroke: #10B981;
+  stroke-width: 2.5;
+}
+
+.pay-success-check path {
+  fill: none;
+  stroke: #34D399;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: payTick 0.5s 0.2s ease forwards;
+}
+
+@keyframes payTick { to { stroke-dashoffset: 0; } }
+
+.pay-success-title {
+  margin-top: 16px;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.pay-success-sub {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  color: var(--text-gray);
+  text-align: center;
+}
+
+.pay-receipt {
+  width: min(520px, 100%);
+  margin-top: 24px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: rgba(17, 23, 38, 0.85);
+  border: 1px solid var(--tv-border);
+}
+
+.pay-mono { font-family: "Consolas", "SFMono-Regular", monospace; letter-spacing: 0.04em; }
+
+.pay-success-actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 26px;
+}
+
+/* Auto-redirect countdown under the receipt */
+.pay-redirect-note {
+  margin-top: 4px;
+  color: #FFD54A;
+  font-weight: 700;
+}
+
+/* ---------- Scan & Pay QR popup (opened by Click to Pay) ---------- */
+.pay-qr-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 5, 12, 0.78);
+  backdrop-filter: blur(6px);
+  animation: payQrFade 0.2s ease;
+}
+
+@keyframes payQrFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pay-qr-card {
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 28px 32px 26px;
+  border-radius: 22px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: payQrPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes payQrPop {
+  from { transform: scale(0.94); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.pay-qr-card .pay-card-label {
+  margin-bottom: 8px;
+}
+
+.pay-qr-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0 0 4px;
+}
+
+.pay-qr-title span {
+  color: #34D399;
+}
+
+.pay-qr-sub {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  margin: 0 0 18px;
+}
+
+/* The QR itself is the button */
+.pay-qr-box {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #FFFFFF;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pay-qr-box.tv-focused,
+.pay-qr-box:hover {
+  transform: scale(1.04);
+  border-color: #34D399;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.25), 0 0 30px rgba(52, 211, 153, 0.45);
+}
+
+.pay-qr-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* "Payment received" state on top of the QR */
+.pay-qr-done {
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #047857;
+  font-weight: 800;
+  font-size: 1.05rem;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.pay-qr-done-tick {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #10B981;
+  color: #FFFFFF;
+  font-size: 2rem;
+}
+
+.pay-qr-box.pay-qr-paid .pay-qr-done {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pay-qr-pkg {
+  margin: 16px 0 18px;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.pay-qr-hint {
+  margin: 0 0 18px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.pay-qr-hint b {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}

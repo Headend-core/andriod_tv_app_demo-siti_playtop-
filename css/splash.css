@@ -1,0 +1,69 @@
+/**
+ * VIBE - Startup animation (plays every time the app starts, then the normal flow)
+ * Full-HD design size (1920x1080 CSS px), always centered:
+ *  - 100% zoom on a 1080p screen / TV → fills the whole screen
+ *  - zoom in → grows past the window edges; zoom out → gets smaller, centered
+ * Background: a slow-drifting neon gradient in the video's own colours
+ * (VIBE magenta → violet → cyan on deep navy). The video's edges fade into it.
+ * Lightly sharpened / colour-boosted. (Source clip is 854x480.)
+ */
+
+#screen-splash {
+  --vibe-magenta: #FF2FB3;
+  --vibe-violet: #8B3DFF;
+  --vibe-cyan: #19D3FF;
+  --vibe-navy: #0A0820;
+  --vibe-deep: #05040F;
+
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+}
+
+/* Slowly drifting colour glow on top of the base gradient */
+#screen-splash::before { display: none; }
+
+@keyframes vibeGlowDrift {
+  from { transform: translate(-4%, -3%) rotate(0deg); }
+  to   { transform: translate(4%, 3%) rotate(8deg); }
+}
+
+.splash-video {
+  /* Fixed 1920x1080 (no cap to the window) so browser zoom scales it both ways,
+     like the rest of the page: zoom in → bigger (edges go off-screen), zoom out → smaller */
+  position: relative;          /* above the drifting glow */
+  /* Fit the TV screen at any resolution (720p / 1080p / 4K): the whole
+     animation is always visible, centered, never cropped or oversized */
+  width: 80vw;
+  height: 80vh;
+  max-width: 100%;
+  max-height: 100%;
+  flex-shrink: 1;
+  object-fit: contain;
+  background: transparent;
+  /* Soft edges so the video melts into the gradient instead of a hard rectangle */
+  /* Soft fade on all 4 sides (left/right and top/bottom fades combined),
+     so no hard edges anywhere; the corners fade the most, the middle stays solid */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-image:
+    linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 20%, #000 80%, transparent 100%);
+          mask-composite: intersect;
+  filter: url(#splash-sharpen) contrast(1.06) saturate(1.15) brightness(1.03);
+  transform: translateZ(0);   /* keep the scaled video on the GPU */
+}
+
+.splash-filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #screen-splash::before { animation: none; }
+}

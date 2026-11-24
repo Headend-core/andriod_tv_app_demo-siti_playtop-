@@ -1,0 +1,347 @@
+/**
+ * VIBE PlayTop Magic — Visual Theme Layer
+ * Pure styling on top of the existing UI (loaded last). No layout or logic changes:
+ * ambient brand backgrounds, glass surfaces, gradient accents, richer focus glow,
+ * nicer typography. Remove this file's <link> to get the previous look back.
+ */
+
+:root {
+  --vibe-magenta: #FF2FB3;
+  --vibe-violet: #8B3DFF;
+  --vibe-cyan: #19D3FF;
+  --vibe-red: #E51B24;
+
+  --grad-brand: linear-gradient(90deg, #E51B24 0%, #FF2FB3 50%, #8B3DFF 100%);
+  --grad-brand-soft: linear-gradient(135deg, rgba(229, 27, 36, 0.22), rgba(255, 47, 179, 0.16) 50%, rgba(139, 61, 255, 0.2));
+  --grad-cool: linear-gradient(90deg, #8B3DFF, #19D3FF);
+
+  --glass-bg: rgba(18, 22, 44, 0.62);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  /* Focus: crisp white ring + light, refined white halo */
+  --tv-focus-glow: 0 0 0 2.5px #FFFFFF, 0 0 12px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.3), 0 10px 24px rgba(0, 0, 0, 0.8);
+
+  --font-display: "Roboto", sans-serif;
+  --font-body: "Roboto", sans-serif;
+}
+
+html, body {
+  font-family: var(--font-body);
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+/* ---------- Pure Black Backgrounds on All Screens ---------- */
+#screen-profile,
+#screen-home,
+#screen-epg,
+#screen-search,
+#screen-profile-account,
+#screen-plan-benefits,
+#screen-subscription,
+#screen-payment,
+.tv-screen {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+#screen-profile::after,
+#screen-home::after,
+#screen-profile-account::after {
+  display: none !important;
+}
+
+/* ---------- Typography ---------- */
+.hero-title,
+.rail-heading,
+.profile-screen-title,
+.login-title,
+.landing-title,
+.cp-title,
+.sub-store-top-title,
+.sub-heading-text,
+.benefits-header-title,
+.account-user-name-badge,
+.account-section-heading,
+.exit-dialog-title,
+.help-title-text,
+.pay-success-title,
+.acc-info-title {
+  font-family: var(--font-display);
+  letter-spacing: -0.2px;
+}
+
+.profile-screen-title {
+  font-weight: 700;
+  background: linear-gradient(90deg, #FFFFFF 0%, #FFD1F0 45%, #CDB8FF 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 24px rgba(255, 47, 179, 0.25));
+}
+
+/* Rail headings get a small brand accent bar */
+.rail-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+}
+
+.rail-heading::before {
+  content: "";
+  width: 5px;
+  height: 1.05em;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--vibe-magenta), var(--vibe-violet));
+  box-shadow: 0 0 12px rgba(255, 47, 179, 0.6);
+  flex-shrink: 0;
+}
+
+/* ---------- Side navigation: clean pure black rail ---------- */
+.side-navigation {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.side-nav-logo-img {
+  filter: drop-shadow(0 0 12px rgba(255, 47, 179, 0.45)) drop-shadow(0 3px 10px rgba(0, 0, 0, 0.7));
+}
+
+.nav-item {
+  color: #9AA4BF;
+}
+
+.nav-item.active-nav {
+  background: var(--grad-brand-soft);
+  border-color: transparent;
+  box-shadow: inset 3px 0 0 var(--vibe-magenta), 0 0 18px rgba(255, 47, 179, 0.18);
+}
+
+.nav-item.tv-focused {
+  background: linear-gradient(90deg, #FFFFFF, #F4ECFF) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 24px rgba(255, 47, 179, 0.45),
+              0 6px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ---------- Hero banner ---------- */
+.hero-banner-section {
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.hero-title {
+  font-weight: 800;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+.hero-description {
+  color: #D7DCEA;
+}
+
+.btn-watch-now {
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.btn-watch-now.tv-focused {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 0 30px rgba(255, 47, 179, 0.6),
+              0 10px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+.hero-dot.dot-active {
+  background: var(--grad-brand);
+  box-shadow: 0 0 10px rgba(255, 47, 179, 0.6);
+}
+
+.hero-partner-pill {
+  background: rgba(10, 14, 30, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------- Content cards ---------- */
+.media-card {
+  border-radius: 14px;
+  background: linear-gradient(180deg, #171C36 0%, #11152A 100%);
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes tvTileGlowPulse {
+  0%, 100% {
+    border-color: #FFFFFF !important;
+    box-shadow: 
+      0 0 0 2.5px #FFFFFF,
+      0 0 10px rgba(255, 255, 255, 0.55),
+      0 0 20px rgba(255, 255, 255, 0.25),
+      0 10px 24px rgba(0, 0, 0, 0.8) !important;
+  }
+  50% {
+    border-color: #FFFFFF !important;
+    box-shadow: 
+      0 0 0 3px #FFFFFF,
+      0 0 14px rgba(255, 255, 255, 0.75),
+      0 0 28px rgba(255, 255, 255, 0.38),
+      0 12px 28px rgba(0, 0, 0, 0.85) !important;
+  }
+}
+
+.media-card.tv-focused {
+  border: 2.5px solid #FFFFFF !important;
+  animation: tvTileGlowPulse 1.6s ease-in-out infinite !important;
+}
+
+.card-badge-live {
+  background: linear-gradient(90deg, #E51B24, #FF2F6B);
+  box-shadow: 0 2px 10px rgba(229, 27, 36, 0.5);
+}
+
+.channel-square-logo {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 -40px 50px rgba(0, 0, 0, 0.25),
+              inset 0 40px 50px rgba(255, 255, 255, 0.06);
+}
+
+/* ---------- Profile picker ---------- */
+.profile-inner-avatar {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 2px 0 rgba(255, 255, 255, 0.18);
+}
+
+.profile-circle-btn.tv-focused .profile-outer-ring,
+.profile-circle-btn:focus-visible .profile-outer-ring {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 0 2.5px #FFFFFF, 0 0 16px rgba(255, 255, 255, 0.7),
+              0 0 30px rgba(255, 255, 255, 0.35) !important;
+}
+
+.account-avatar-circle-wrap.tv-focused {
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.7));
+}
+
+/* ---------- Glass panels & dialogs ---------- */
+.login-card,
+.acc-info-box,
+.help-modal-box,
+.exit-dialog-card,
+.sub-summary-card,
+.pay-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 47, 179, 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.login-card,
+.exit-dialog-card,
+.help-modal-box,
+.pref-modal-box,
+.acc-info-card,
+.quick-recharge-card,
+.pay-qr-card {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ---------- Primary buttons: brand gradient ---------- */
+.btn-sub-proceed-pay,
+.btn-click-to-pay,
+.reg-submit-btn,
+.cp-btn-primary,
+.exit-btn-yes {
+  background: var(--grad-brand) !important;
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(229, 27, 36, 0.3);
+}
+
+.btn-sub-proceed-pay.tv-focused,
+.btn-click-to-pay.tv-focused,
+.reg-submit-btn.tv-focused,
+.cp-btn-primary.tv-focused,
+.exit-btn-yes.tv-focused {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 47, 179, 0.6),
+              0 10px 28px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ---------- Subscription packages ---------- */
+.package-card {
+  background: linear-gradient(160deg, #171B38 0%, #10132A 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.package-card.package-selected {
+  box-shadow: 0 0 0 1px rgba(255, 47, 179, 0.45), 0 0 26px rgba(255, 47, 179, 0.22);
+}
+
+/* ---------- Landing channel ---------- */
+.landing-title {
+  font-weight: 800;
+  text-shadow: 0 6px 30px rgba(255, 47, 179, 0.35);
+}
+
+/* ---------- On-screen remote: clean black ---------- */
+.virtual-remote-widget {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9) !important;
+}
+
+.remote-num-btn {
+  background: #111827 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #F8FAFC !important;
+}
+
+.remote-num-btn:hover {
+  background: #1F2937 !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.remote-num-btn:active {
+  background: #E51B24 !important;
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+.remote-num-btn.remote-num-clear {
+  color: #F87171 !important;
+}
+
+.remote-num-btn.remote-num-enter {
+  color: #34D399 !important;
+}
+
+.lcn-osd-inner,
+.player-channel-banner {
+  background: #000000 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ---------- Gentle entrance when a screen opens ---------- */
+@keyframes vibeScreenIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.tv-screen.screen-active:not(#screen-splash) {
+  animation: vibeScreenIn 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-screen.screen-active { animation: none; }
+}
+
+/* Round avatars draw their own circular ring: no square focus box around them */
+.profile-circle-btn.tv-focused,
+.profile-circle-btn:focus-visible {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}

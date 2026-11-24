@@ -1,0 +1,703 @@
+/* ==========================================================
+   FULL-SCREEN PLAYER (#screen-player-modal)
+   Full-bleed picture, soft top/bottom shades for the controls,
+   and a "tuning" transition when the channel changes.
+   ========================================================== */
+
+#screen-player-modal {
+  background: #000000;
+}
+
+#screen-player-modal .player-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+/* Picture layers: the live picture and the outgoing one during a zap */
+#screen-player-modal .player-video-sim,
+#screen-player-modal .player-video-ghost {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: opacity, transform, filter;
+}
+
+#screen-player-modal .player-video-sim { z-index: 0; }
+
+#screen-player-modal .player-video-ghost {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Shades so the title and controls read on any picture */
+#screen-player-modal .player-container::before,
+#screen-player-modal .player-container::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+#screen-player-modal .player-container::before {
+  top: 0;
+  height: 30%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0) 100%);
+}
+#screen-player-modal .player-container::after {
+  bottom: 0;
+  height: 34%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* ---- Top: channel / programme title + Back ---- */
+#screen-player-modal .player-top-controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 40px 56px 0;
+}
+
+#screen-player-modal .player-meta-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1.15;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+
+#screen-player-modal .player-meta-sub {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFD200;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- Bottom: progress + buttons ---- */
+#screen-player-modal .player-bottom-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 0 56px 44px;
+}
+
+#screen-player-modal .player-scrubber-bar {
+  position: relative;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+
+#screen-player-modal .player-scrubber-progress {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  background: linear-gradient(90deg, #E51B24, #FF2FB3);
+  box-shadow: 0 0 10px rgba(255, 47, 179, 0.6);
+}
+
+#screen-player-modal .player-buttons-strip {
+  display: flex;
+  gap: 14px;
+}
+
+#screen-player-modal .player-btn {
+  padding: 11px 22px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+#screen-player-modal .player-btn.tv-focused {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.55);
+}
+
+/* ---- Channel change ("zap") transition ---- */
+
+/* Outgoing picture: dims, softens and drifts away */
+#screen-player-modal .player-video-ghost.player-zap-out {
+  animation: playerZapOut 0.5s ease forwards;
+}
+@keyframes playerZapOut {
+  0%   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0) brightness(1); }
+  100% { opacity: 0; transform: translateX(calc(-1 * var(--zap-x, 0px))) scale(0.97); filter: blur(10px) brightness(0.4); }
+}
+
+/* Incoming picture: tunes in from a soft, bright blur and settles */
+#screen-player-modal .player-video-sim.player-zap-in {
+  animation: playerZapIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes playerZapIn {
+  0%   { opacity: 0; transform: translateX(var(--zap-x, 0px)) scale(1.06); filter: blur(14px) brightness(1.35) saturate(1.2); }
+  45%  { opacity: 1; }
+  100% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0) brightness(1) saturate(1); }
+}
+
+/* Title / programme swap */
+#screen-player-modal .player-top-controls > div.player-meta-swap > * {
+  animation: playerMetaIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+#screen-player-modal .player-top-controls > div.player-meta-swap > :nth-child(2) {
+  animation-delay: 0.07s;
+}
+@keyframes playerMetaIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Channel banner details cascade in after the banner slides down */
+.player-channel-banner.pcb-swap .pcb-lcn,
+.player-channel-banner.pcb-swap .pcb-name,
+.player-channel-banner.pcb-swap .pcb-prog,
+.player-channel-banner.pcb-swap .pcb-right {
+  animation: playerMetaIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.player-channel-banner.pcb-swap .pcb-name  { animation-delay: 0.05s; }
+.player-channel-banner.pcb-swap .pcb-prog  { animation-delay: 0.10s; }
+.player-channel-banner.pcb-swap .pcb-right { animation-delay: 0.14s; }
+
+/* ==========================================================
+   CONTROLS VISIBILITY, PAUSE, SUBTITLES, TOAST, KEY HINT
+   ========================================================== */
+
+/* Live "watching" mode: title + buttons tucked away (OK brings them back) */
+#screen-player-modal .player-container::before,
+#screen-player-modal .player-container::after {
+  transition: opacity 0.3s ease;
+}
+#screen-player-modal .player-chrome-hidden .player-top-controls {
+  opacity: 0;
+  transform: translateY(-16px);
+  pointer-events: none;
+}
+#screen-player-modal .player-chrome-hidden .player-bottom-controls {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+#screen-player-modal .player-chrome-hidden::before,
+#screen-player-modal .player-chrome-hidden::after {
+  opacity: 0.35;
+}
+/* No focus ring on the hidden Pause button */
+#screen-player-modal .player-chrome-hidden .player-btn.tv-focused {
+  box-shadow: none;
+}
+
+/* Paused: picture dims and freezes, big pause mark in the middle */
+#screen-player-modal .player-video-sim {
+  transition: filter 0.3s ease;
+}
+#screen-player-modal .player-is-paused .player-video-sim {
+  filter: brightness(0.55) saturate(0.6);
+}
+.player-paused-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  letter-spacing: -6px;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.player-is-paused .player-paused-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+#screen-player-modal .player-is-paused .player-scrubber-progress {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+/* Subtitles line */
+.player-subtitle {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  z-index: 4;
+  transform: translateX(-50%);
+  max-width: 70%;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #FFFFFF;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  transition: bottom 0.25s ease;
+}
+.player-subtitle[hidden] { display: none !important; }
+/* sit above the buttons while they are on screen */
+.player-container:not(.player-chrome-hidden) .player-subtitle { bottom: 170px; }
+
+/* Feedback toast (Paused / Audio: Hindi / Subtitles: English) */
+.player-toast {
+  position: absolute;
+  top: 50%;
+  right: 56px;
+  z-index: 5;
+  transform: translateY(-50%);
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  font-size: 1.05rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+.player-toast[hidden] { display: none !important; }
+.player-toast.pl-toast-in { animation: plToastIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes plToastIn {
+  from { opacity: 0; transform: translate(16px, -50%); }
+  to   { opacity: 1; transform: translate(0, -50%); }
+}
+
+/* Key hint shown when live playback starts */
+.player-key-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  z-index: 5;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.player-key-hint[hidden] { display: none !important; }
+.player-key-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+.player-key-hint kbd {
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #000000;
+  background: #FFFFFF;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.player-key-hint.pl-hint-in { animation: plHintIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes plHintIn {
+  from { opacity: 0; transform: translate(-50%, 14px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ==========================================================
+   LIVE PLAYER OVERLAYS (▼ On now rail, ▲ Upcoming Shows)
+   ========================================================== */
+
+/* Player chrome steps aside while an overlay is open */
+#screen-player-modal .player-top-controls,
+#screen-player-modal .player-bottom-controls {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#screen-player-modal .player-overlay-open .player-bottom-controls {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+#screen-player-modal .player-overlay-up .player-top-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.player-rail[hidden],
+.player-upnext[hidden] { display: none !important; }
+
+/* Shared programme picture */
+.pl-poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+.pl-poster span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pl-live {
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  background: #E51B24;
+  padding: 3px 7px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(229, 27, 36, 0.5);
+}
+
+/* ---- ▼ On now rail ---- */
+.player-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 160;
+  padding: 120px 0 44px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.85) 55%, rgba(0, 0, 0, 0) 100%);
+}
+.player-rail.pl-overlay-in { animation: plRailIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes plRailIn {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.player-rail-head {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 0 56px 14px;
+}
+.player-rail-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.player-rail-title::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 1em;
+  margin-right: 12px;
+  vertical-align: -2px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #FF2FB3, #8B5CF6);
+}
+.player-rail-hint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.player-rail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 10px 56px 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.player-rail-row::-webkit-scrollbar { display: none; }
+
+.pl-rail-item {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 0;
+  width: 250px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, box-shadow 0.2s ease, gap 0.32s ease;
+}
+.pl-rail-thumb {
+  position: relative;
+  flex: 0 0 250px;
+}
+.pl-rail-thumb .pl-poster { border-radius: 14px; }
+.pl-rail-thumb .pl-live { position: absolute; top: 8px; left: 8px; }
+.pl-rail-thumb .pl-lcn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+.pl-rail-txt {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 18px 12px 4px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+.pl-rail-txt b {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-rail-txt span {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #FFD200;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-rail-txt p {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #CBD5E1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Focused channel opens into a details card */
+.pl-rail-item.tv-focused {
+  width: 580px;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2.5px #FFFFFF, 0 0 22px rgba(255, 255, 255, 0.35);
+  transform: none !important;
+}
+.pl-rail-item.tv-focused .pl-rail-txt {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.12s;
+}
+
+/* ---- ▲ Upcoming Shows ---- */
+.player-upnext {
+  position: absolute;
+  inset: 0;
+  z-index: 160;
+  background: #000000;
+  overflow: hidden;
+}
+.player-upnext.pl-overlay-in { animation: plUpIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes plUpIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pl-up-bg {
+  position: absolute;
+  inset: 0 0 0 30%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px) brightness(0.55);
+  transform: scale(1.04);
+}
+.pl-up-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.2) 70%),
+    linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 55%);
+}
+
+.pl-up-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 56px 44px;
+  box-sizing: border-box;
+}
+
+.pl-up-head {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 18px 8px 10px;
+  cursor: pointer;
+}
+.pl-up-head span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+.pl-up-head.tv-focused {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+
+.pl-up-inner { justify-content: center; }
+.pl-up-head { position: absolute; top: 40px; left: 56px; }
+
+.pl-up-main {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin: 40px 0 0;
+}
+.pl-poster-lg {
+  flex: 0 0 620px;
+  width: 620px;
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7);
+}
+.pl-poster-lg span { font-size: 1.4rem; }
+
+.pl-up-txt { max-width: 640px; }
+.pl-up-badges { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.pl-up-badges small { font-size: 0.9rem; font-weight: 700; color: rgba(255, 255, 255, 0.7); }
+.pl-up-txt b {
+  display: block;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1.12;
+  margin-bottom: 10px;
+}
+.pl-up-txt span {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFD200;
+  margin-bottom: 4px;
+}
+.pl-up-txt span + span { color: rgba(255, 255, 255, 0.7); }
+.pl-up-txt p {
+  margin-top: 14px;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: #D7DCEA;
+}
+
+.pl-up-label {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 52px 0 14px;
+}
+.pl-up-row {
+  display: flex;
+  gap: 20px;
+}
+.pl-up-card { flex: 0 0 290px; }
+.pl-up-card b {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-up-card > span {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+}
+.pl-up-empty { color: rgba(255, 255, 255, 0.6); font-size: 1rem; }
+
+/* Staggered entrance for the Upcoming page */
+.player-upnext.pl-overlay-in .pl-up-main,
+.player-upnext.pl-overlay-in .pl-up-label,
+.player-upnext.pl-overlay-in .pl-up-row {
+  animation: playerMetaIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.player-upnext.pl-overlay-in .pl-up-main  { animation-delay: 0.08s; }
+.player-upnext.pl-overlay-in .pl-up-label { animation-delay: 0.16s; }
+.player-upnext.pl-overlay-in .pl-up-row   { animation-delay: 0.22s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .player-rail.pl-overlay-in,
+  .player-upnext.pl-overlay-in,
+  .player-upnext.pl-overlay-in * { animation-duration: 0.01s !important; animation-delay: 0s !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #screen-player-modal .player-video-sim.player-zap-in,
+  #screen-player-modal .player-video-ghost.player-zap-out,
+  #screen-player-modal .player-top-controls > div.player-meta-swap > *,
+  .player-channel-banner.pcb-swap * {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
+}
