@@ -2,8 +2,8 @@
 workflow/
 .claude/
 
-# over GitHub's 100 MB file limit
-video for landing/*.mp4
+# full-size original (135 MB, over GitHub's 100 MB limit) - the compressed copy is committed
+video for landing/*.original.mp4
 
 # local symlinks (machine-specific absolute paths)
 /fonts
