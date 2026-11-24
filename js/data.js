@@ -168,8 +168,8 @@ const VIBE_DATA = {
       title: "Star Sports 1 HD",
       subtitle: "IND vs NZ • 2nd ODI Live",
       isLiveTV: true,
-      channelNumber: "301",
-      lcn: "301",
+      channelNumber: "501",
+      lcn: "501",
       progress: 40,
       timeLeft: "Live Broadcast",
       image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&auto=format&fit=crop",
@@ -181,8 +181,8 @@ const VIBE_DATA = {
       title: "Zee Bangla",
       subtitle: "Mithai • Live Broadcast",
       isLiveTV: true,
-      channelNumber: "320",
-      lcn: "320",
+      channelNumber: "135",
+      lcn: "135",
       progress: 50,
       timeLeft: "Live Broadcast",
       image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=600&auto=format&fit=crop",
@@ -258,7 +258,7 @@ const VIBE_DATA = {
     },
     {
       id: "live-6",
-      channelNumber: "301",
+      channelNumber: "501",
       name: "Star Sports 1 HD",
       nowPlaying: "India vs New Zealand: 2nd ODI",
       time: "1:30 PM - 5:30 PM",
@@ -319,13 +319,13 @@ const VIBE_DATA = {
   // POPULAR CHANNELS (square logo tiles on Home)
   popularChannels: [
     { id: "pc-1", name: "ABP Ananda", lcn: "335", logo: "abp<br><b>আনন্দ</b>", fg: "#FFFFFF", bg: "linear-gradient(135deg,#C8102E,#7A0019)", nowPlaying: "Top Headlines" },
-    { id: "pc-2", name: "Zee Bangla HD", lcn: "320", logo: "<b>Z</b> বাংলা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#6D28D9,#2E1065)", nowPlaying: "Prime Time Serial" },
-    { id: "pc-3", name: "Star Jalsha HD", lcn: "322", logo: "★<br><b>Star</b> জলসা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#F97316,#9A3412)", nowPlaying: "Evening Drama" },
+    { id: "pc-2", name: "Zee Bangla HD", lcn: "135", logo: "<b>Z</b> বাংলা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#6D28D9,#2E1065)", nowPlaying: "Prime Time Serial" },
+    { id: "pc-3", name: "Star Jalsha HD", lcn: "136", logo: "★<br><b>Star</b> জলসা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#F97316,#9A3412)", nowPlaying: "Evening Drama" },
     { id: "pc-4", name: "Aaj Tak HD", lcn: "301", logo: "<b>आज तक</b><br>HD", fg: "#FFFFFF", bg: "linear-gradient(135deg,#DC2626,#1F2937)", nowPlaying: "Live News" },
-    { id: "pc-5", name: "Star Gold HD", lcn: "410", logo: "★<br><b>STAR GOLD</b>", fg: "#FDE68A", bg: "linear-gradient(135deg,#B45309,#3B2106)", nowPlaying: "Superhit Movie" },
-    { id: "pc-6", name: "TV9 Bangla", lcn: "338", logo: "<b>tv9</b><br>বাংলা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#1D4ED8,#0B1F5C)", nowPlaying: "Breaking News" },
+    { id: "pc-5", name: "Star Gold HD", lcn: "405", logo: "★<br><b>STAR GOLD</b>", fg: "#FDE68A", bg: "linear-gradient(135deg,#B45309,#3B2106)", nowPlaying: "Superhit Movie" },
+    { id: "pc-6", name: "TV9 Bangla", lcn: "320", logo: "<b>tv9</b><br>বাংলা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#1D4ED8,#0B1F5C)", nowPlaying: "Breaking News" },
     { id: "pc-7", name: "Zee Cinema HD", lcn: "412", logo: "<b>Z</b> CINEMA", fg: "#FFFFFF", bg: "linear-gradient(135deg,#0E7490,#082F49)", nowPlaying: "Action Blockbuster" },
-    { id: "pc-8", name: "&pictures HD", lcn: "415", logo: "<b>&amp;</b>pictures", fg: "#FFFFFF", bg: "linear-gradient(135deg,#BE185D,#4A0D2B)", nowPlaying: "Weekend Premiere" },
+    { id: "pc-8", name: "&pictures HD", lcn: "418", logo: "<b>&amp;</b>pictures", fg: "#FFFFFF", bg: "linear-gradient(135deg,#BE185D,#4A0D2B)", nowPlaying: "Weekend Premiere" },
     { id: "pc-9", name: "Colors Bangla", lcn: "324", logo: "<b>colors</b><br>বাংলা", fg: "#FFFFFF", bg: "linear-gradient(135deg,#0891B2,#7C3AED)", nowPlaying: "Reality Show" },
     { id: "pc-10", name: "Star Sports 1 HD", lcn: "501", logo: "★<br><b>SPORTS 1</b>", fg: "#FFFFFF", bg: "linear-gradient(135deg,#15803D,#052E16)", nowPlaying: "Live Cricket" }
   ],
@@ -1553,7 +1553,7 @@ const VIBE_DATA = {
   addUnique(D.popularChannels, [
     { id: "pc-11", name: "Star Plus HD", lcn: "115", logo: "★<br><b>STAR</b> PLUS", fg: "#FFFFFF", bg: "linear-gradient(135deg,#E51B24,#5F0A0E)", nowPlaying: "Anupamaa" },
     { id: "pc-12", name: "Colors HD", lcn: "147", logo: "<b>colors</b><br>HD", fg: "#FFFFFF", bg: "linear-gradient(135deg,#FF6600,#7C2D12)", nowPlaying: "Bigg Boss Unseen" },
-    { id: "pc-13", name: "Zee Bangla HD", lcn: "135", logo: "<b>Z</b> বাংলা<br>HD", fg: "#FFFFFF", bg: "linear-gradient(135deg,#7C3AED,#1E1B4B)", nowPlaying: "Didi No. 1" },
+    { id: "pc-13", name: "Sony Aath", lcn: "712", logo: "<b>SONY</b><br>আট", fg: "#FFFFFF", bg: "linear-gradient(135deg,#0EA5E9,#0C4A6E)", nowPlaying: "Bengali Serials" },
     { id: "pc-14", name: "Sony Max HD", lcn: "420", logo: "<b>SONY</b><br>MAX", fg: "#FFFFFF", bg: "linear-gradient(135deg,#1D4ED8,#172554)", nowPlaying: "Sooryavanshi" },
     { id: "pc-15", name: "Jalsha Movies HD", lcn: "425", logo: "<b>Jalsha</b><br>MOVIES", fg: "#FDE68A", bg: "linear-gradient(135deg,#B45309,#451A03)", nowPlaying: "Chander Pahar" },
     { id: "pc-16", name: "Movies Now HD", lcn: "430", logo: "<b>MOVIES</b><br>NOW", fg: "#FFFFFF", bg: "linear-gradient(135deg,#7C3AED,#3B0764)", nowPlaying: "Hollywood Action Hour" },
@@ -1732,5 +1732,52 @@ const VIBE_DATA = {
       { name: "Republic Bangla", ch: "1368", lang: "Bengali", icon: "RB", color: "#B91C1C" },
       { name: "Kolkata TV", ch: "1370", lang: "Bengali", icon: "KTV", color: "#1D4ED8" }
     ].forEach((c) => { if (!news.some((x) => x.name === c.name)) news.push(c); });
+  });
+})();
+
+/* ------------------------------------------------------------------
+ * ONE NUMBER PER CHANNEL, EVERYWHERE
+ * The guide and the home rails share one channel numbering (LCN), but
+ * the package channel lists used an older numbering of their own, so
+ * the same number could mean two channels (e.g. 501 = Star Sports 1 HD
+ * in the guide but Cartoon Network in a package). This pass runs last:
+ *  1. channels that are in the guide / rails take that LCN in every package
+ *  2. package-only channels keep one number across all packages, moved to
+ *     the next free number if it is already taken by another channel
+ * ------------------------------------------------------------------ */
+(function unifyChannelNumbers() {
+  const D = VIBE_DATA;
+  // same rule as app.sameChannelName
+  const norm = (s) => String(s || "").toLowerCase().replace(/\bsports ten\b/g, "ten")
+    .replace(/\b(hd|tv)\b/g, "").replace(/[^a-z0-9]/g, "");
+  const numOf = (c) => c.lcn || c.channelNumber;
+
+  const nameToNum = new Map(); // canonical channel name → number
+  const numToName = new Map(); // number → canonical channel name
+  const claim = (name, num) => {
+    const n = norm(name), k = String(num);
+    if (!n || !k || nameToNum.has(n) || numToName.has(k)) return false;
+    nameToNum.set(n, k);
+    numToName.set(k, n);
+    return true;
+  };
+
+  // 1. guide first, then the rails (the numbers the viewer sees on tiles)
+  ((D.liveTvGuide && D.liveTvGuide.channels) || []).forEach((c) => claim(c.name, c.lcn));
+  ["freeChannels", "popularChannels", "liveChannels", "newsChannels", "recentlyWatched"].forEach((k) =>
+    (D[k] || []).forEach((c) => { if (numOf(c)) claim(c.name || c.title, numOf(c)); }));
+
+  // 2. package lists
+  const entries = [];
+  (D.packages || []).forEach((p) => Object.values(p.categories || {}).forEach((arr) => {
+    if (Array.isArray(arr)) arr.forEach((c) => { if (c && c.name && c.ch) entries.push(c); });
+  }));
+  entries.forEach((c) => {
+    const n = norm(c.name);
+    if (nameToNum.has(n)) { c.ch = nameToNum.get(n); return; }
+    let k = Number(c.ch);
+    while (numToName.has(String(k))) k++; // next free number in the same block
+    claim(c.name, k);
+    c.ch = String(k);
   });
 })();

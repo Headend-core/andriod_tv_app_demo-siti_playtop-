@@ -2438,7 +2438,7 @@ class VibePlayTopApp {
         if (!p.categories) return false;
         let cList = [];
         Object.values(p.categories).forEach(arr => { if (Array.isArray(arr)) cList.push(...arr); });
-        return cList.some(c => String(c.ch) === targetLcn || targetName.includes(String(c.name).toLowerCase()) || String(c.name).toLowerCase().includes(targetName));
+        return cList.some(c => (targetName ? this.sameChannelName(c.name, targetName) : String(c.ch) === targetLcn));
       });
       if (matchingPkg) {
         this.selectedPackageId = matchingPkg.id;
@@ -3988,9 +3988,11 @@ class VibePlayTopApp {
       const freeChs = (typeof VIBE_DATA !== "undefined" && VIBE_DATA.freeChannels) ? VIBE_DATA.freeChannels : [];
       const popChs = (typeof VIBE_DATA !== "undefined" && VIBE_DATA.popularChannels) ? VIBE_DATA.popularChannels : [];
 
-      const matchedChannel = guideChannels.find(c => (chNum && String(c.lcn) === String(chNum)) || (c.name && c.name.toLowerCase() === rawTitle.toLowerCase()))
-        || freeChs.find(c => (chNum && String(c.lcn) === String(chNum)) || (c.name && c.name.toLowerCase() === rawTitle.toLowerCase()))
-        || popChs.find(c => (chNum && String(c.lcn) === String(chNum)) || (c.name && c.name.toLowerCase() === rawTitle.toLowerCase()));
+      // Name first; a channel number only counts when the names agree, so a
+      // mistyped LCN can never show a different channel (e.g. Zee Bangla → TV9)
+      const pick = (list) => list.find(c => rawTitle && this.sameChannelName(c.name, rawTitle))
+        || list.find(c => chNum && String(c.lcn) === String(chNum) && (!rawTitle || this.sameChannelName(c.name, rawTitle)));
+      const matchedChannel = pick(guideChannels) || pick(freeChs) || pick(popChs);
 
       if (isLive || chNum || matchedChannel) {
         displayTitle = matchedChannel ? matchedChannel.name : rawTitle;
@@ -4972,21 +4974,20 @@ class VibePlayTopApp {
 
     const lcn = String(ch.lcn || ch.channelNumber || ch.ch || "").trim();
     const rawName = String(ch.name || ch.title || "").toLowerCase().trim();
-    const cleanName = rawName.replace(/[^a-z0-9]/g, "");
 
-    // Premium channels exclusively in higher tiers (Sports Combo, Cinema Plus, Gold, Diamond)
-    const premiumHigherTierLcns = ["408", "411", "202", "225", "229"];
+    // Premium channels exclusively in higher tiers (Sports Combo, Cinema Plus, Gold, Diamond).
+    // Matched by name: channel numbers are shared by the guide and packages, so a
+    // number list here would silently hit an unrelated channel.
     const premiumHigherTierNames = ["star sports select", "sony sports ten 2", "sony sports ten 5", "eurosport", "star movies", "&flix", "star gold select"];
 
     if (pkgId === "pkg-1") {
       // Starter Magic excludes sports HD and premium movies
-      if (["401", "403", "407", "408", "409", "410", "411", "501"].includes(lcn) ||
-          rawName.includes("star sports") || rawName.includes("ten 1") || rawName.includes("ten 3")) {
+      if (/star sports|sony sports|\bten [1-5]\b|sports select/.test(rawName)) {
         return false;
       }
     } else if (pkgId === "pkg-2") {
       // Bengali Mega has all Bengali & Hindi entertainment/news/movies, but excludes higher-tier sports/cinema
-      if (premiumHigherTierLcns.includes(lcn) || premiumHigherTierNames.some(pn => rawName.includes(pn))) {
+      if (premiumHigherTierNames.some(pn => rawName.includes(pn))) {
         return false;
       }
     }
@@ -4999,21 +5000,16 @@ class VibePlayTopApp {
       });
     }
 
-    // Check if lcn matches package channel
-    if (lcn && channelList.some(c => String(c.ch).trim() === lcn)) return true;
-
-    // Check if name matches
+    // In the package: same channel name, or (for number-only lookups) the same number.
+    // Numbers are unified across guide, rails and packages (data.js unifyChannelNumbers).
     if (rawName) {
-      const match = channelList.some(c => {
-        const cName = String(c.name || "").toLowerCase().trim();
-        const cClean = cName.replace(/[^a-z0-9]/g, "");
-        return cClean === cleanName || cleanName.includes(cClean) || cClean.includes(cleanName);
-      });
-      if (match) return true;
+      if (channelList.some(c => this.sameChannelName(c.name, rawName))) return true;
+    } else if (lcn && channelList.some(c => String(c.ch).trim() === lcn)) {
+      return true;
     }
 
     // If channel is in liveTvGuide and pkg is pkg-2 (Bengali Mega), all Bengali guide channels belong to Bengali Mega
-    if (pkgId === "pkg-2" && (ch.language === "Bengali" || ["320", "322", "324", "335", "338", "340", "342", "410", "412", "415"].includes(lcn))) {
+    if (pkgId === "pkg-2" && (ch.language === "Bengali" || ["135", "136", "320", "324", "335", "338", "340", "342", "410", "412", "415", "425"].includes(lcn))) {
       return true;
     }
 
@@ -5669,9 +5665,19 @@ class VibePlayTopApp {
       .filter((c) => this.isFreeLiveChannel(c) || (this.isLoggedIn && this.isChannelInPackage(c)));
   }
 
+  // "Zee Bangla HD" == "zee bangla" (ignores case, "HD", a trailing "TV", spaces and
+  // punctuation; "Sony Sports Ten 1" == "Sony Ten 1"). Same rule as data.js unifyChannelNumbers.
+  sameChannelName(a, b) {
+    const n = (x) => String(x || "").toLowerCase().replace(/\bsports ten\b/g, "ten")
+      .replace(/\b(hd|tv)\b/g, "").replace(/[^a-z0-9ऀ-෿]/g, "");
+    return !!a && !!b && n(a) === n(b);
+  }
+
+  // Name wins; the LCN is only trusted when it belongs to a channel of the same name
   findGuideChannel(lcn, name) {
-    return this.allLiveChannels().find((c) => (lcn && String(c.lcn) === String(lcn)) ||
-                             (name && c.name && c.name.toLowerCase() === String(name).toLowerCase())) || null;
+    const all = this.allLiveChannels();
+    return (name && all.find((c) => this.sameChannelName(c.name, name))) ||
+      all.find((c) => lcn && String(c.lcn) === String(lcn) && (!name || this.sameChannelName(c.name, name))) || null;
   }
 
   handlePlayerDirection(direction) {
