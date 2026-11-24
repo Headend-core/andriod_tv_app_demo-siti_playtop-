@@ -436,14 +436,16 @@ class VibePlayTopApp {
     this.loginModalOpen = true;
     this.stopHeroCarousel();
 
-    // New users see the mobile-number registration first (QR login stays available)
+    // QR login opens first; mobile-number login stays one press away
     this.resetRegistration();
-    this.showLoginView("mobile");
+    this.showLoginView("qr");
+    this.refreshLoginCode(false);
 
     modal.classList.remove("screen-hidden");
     modal.classList.add("screen-active");
     window.tvEngine.setScope("#screen-login-modal");
-    this.focusRegKeypad();
+    const refreshBtn = document.getElementById("btn-login-refresh");
+    if (refreshBtn) window.tvEngine.focus(refreshBtn);
   }
 
   hideLoginModal() {
@@ -3964,6 +3966,18 @@ class VibePlayTopApp {
     let desc = "";
     let badgesHtml = "";
 
+    // 0. Happy Diwali promo banner: its own festive info (not the last tile's)
+    if (card.classList.contains("dw-banner")) {
+      displayTitle = "Happy Diwali";
+      subtitle = "शुभ दीपावली · A festive greeting from SITI PlayTop Magic";
+      desc = "May your home glow with light, love & laughter. Press OK to watch the Diwali special.";
+      bg = "assets/diwali_preview.svg";
+      badgesHtml = `
+        <span class="dyn-badge-pill dyn-badge-live">✦ FESTIVE SPECIAL</span>
+        <span class="dyn-badge-pill dyn-badge-genre">Diwali 2026</span>
+        <span class="dyn-badge-pill dyn-badge-hd">Ad · 0:15</span>
+      `;
+    } else
     // 1. OTT Partner App Card (e.g. Disney+ Hotstar, ZEE5, SonyLIV, Hoichoi)
     if (card.classList.contains("vott-app-card") || card.getAttribute("data-app-id")) {
       const appId = card.getAttribute("data-app-id");
@@ -6203,13 +6217,13 @@ class VibePlayTopApp {
       if (!el) return;
 
       const isOtt = this.homeView === "ott";
-      const card = el.closest(".media-card");
+      const card = el.closest(".media-card, .dw-banner");
       const heroBanner = isOtt ? document.getElementById("vott-hero") : document.querySelector("#home-main .hero-banner-section");
       const dynPreview = document.getElementById(isOtt ? "vott-dynamic-preview" : "home-dynamic-preview");
       const previewBar = document.getElementById(isOtt ? "vott-sticky-preview-bar" : "home-sticky-preview-bar");
       const mainScroll = document.getElementById(isOtt ? "vott-main" : "home-main");
 
-      if (card && card.closest(".content-rail, #vott-rails")) {
+      if (card && card.closest(".content-rail, .promo-rail, #vott-rails")) {
         // Focus is on ANY tile in ANY rail → collapse hero banner smoothly and show dynamic preview
         if (heroBanner && !heroBanner.classList.contains("hero-banner-collapsed")) {
           heroBanner.classList.add("hero-banner-collapsed");
