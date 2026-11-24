@@ -497,7 +497,7 @@ class VibePlayTopApp {
     const title = document.getElementById("login-title");
     const goBack = document.getElementById("btn-login-goback");
     if (title) title.textContent = view === "success" ? "Welcome to SITI PlayTop Magic"
-      : view === "mobile" ? "Register with your mobile number" : "Log in with your mobile";
+      : view === "mobile" ? "Log in with your mobile number" : "Log in with your mobile";
     if (goBack) goBack.style.visibility = view === "success" ? "hidden" : "visible";
 
     const qrBox = document.getElementById("btn-login-qr");
